@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Progress Nabung Berjenjang - RDPU</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: 'Plus Jakarta Sans', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background: linear-gradient(135deg, #eef2f6 0%, #e2e8f0 100%);
+      color: #0f172a;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      padding: 1.5rem 1rem;
+    }
+
+    .card {
+      background-color: #ffffff;
+      padding: 2.25rem 2rem;
+      border-radius: 24px;
+      box-shadow: 0 20px 40px -15px rgba(15, 23, 42, 0.07);
+      border: 1px solid #e2e8f0;
+      width: 100%;
+      max-width: 440px;
+      position: relative;
+    }
+
+    .card-header {
+      text-align: center;
+      margin-bottom: 1.25rem;
+    }
+
+    .level-tag {
+      display: inline-block;
+      background-color: #e0e7ff;
+      color: #3730a3;
+      font-size: 0.75rem;
+      font-weight: 800;
+      padding: 4px 12px;
+      border-radius: 20px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 6px;
+    }
+
+    .card-header h2 {
+      margin: 0;
+      color: #0f172a;
+      font-size: 1.5rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+
+    .card-header p {
+      margin: 6px 0 0 0;
+      color: #64748b;
+      font-size: 0.875rem;
+      font-weight: 500;
+    }
+
+    .info-container {
+      margin: 1.25rem 0 0.5rem 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: 700;
+      color: #334155;
+    }
+
+    .percent-badge {
+      background-color: #d1fae5;
+      color: #047857;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 0.875rem;
+    }
+
+    .target-badge {
+      color: #64748b;
+      font-size: 0.875rem;
+    }
+
+    /* Progress Bar */
+    .progress-bar-bg {
+      background-color: #f1f5f9;
+      border-radius: 16px;
+      height: 22px;
+      width: 100%;
+      overflow: hidden;
+      border: 1px solid #e2e8f0;
+    }
+
+    .progress-bar-fill {
+      background: linear-gradient(90deg, #10b981, #059669);
+      height: 100%;
+      width: 0%;
+      transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+      border-radius: 16px;
+    }
+
+    .details {
+      margin-top: 1.25rem;
+      font-size: 0.925rem;
+      line-height: 1.8;
+      color: #475569;
+      background-color: #f8fafc;
+      padding: 12px 16px;
+      border-radius: 14px;
+      border: 1px solid #f1f5f9;
+    }
+
+    .details-row {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .details span {
+      font-weight: 700;
+      color: #0f172a;
+    }
+
+    .input-group {
+      margin-top: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+
+    label {
+      font-weight: 600;
+      font-size: 0.875rem;
+      color: #334155;
+    }
+
+    input {
+      padding: 12px 16px;
+      border-radius: 12px;
+      border: 1.5px solid #cbd5e1;
+      background-color: #ffffff;
+      color: #0f172a;
+      font-size: 1rem;
+      font-weight: 600;
+      outline: none;
+      transition: all 0.2s;
+    }
+
+    input:focus {
+      border-color: #10b981;
+      box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.15);
+    }
+
+    .btn-container {
+      display: flex;
+      gap: 10px;
+      margin-top: 0.5rem;
+    }
+
+    button {
+      padding: 12px 16px;
+      border-radius: 12px;
+      border: none;
+      font-weight: 700;
+      font-size: 0.925rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-submit {
+      flex: 2;
+      background-color: #10b981;
+      color: #ffffff;
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25);
+    }
+
+    .btn-submit:hover {
+      background-color: #059669;
+      transform: translateY(-1px);
+    }
+
+    .btn-reset {
+      flex: 1;
+      background-color: #fef2f2;
+      color: #dc2626;
+      border: 1px solid #fecaca;
+    }
+
+    .btn-reset:hover {
+      background-color: #fee2e2;
+    }
+
+    /* Section Histori Transaksi */
+    .history-section {
+      margin-top: 1.75rem;
+      border-top: 1px solid #e2e8f0;
+      padding-top: 1.25rem;
+    }
+
+    .history-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #0f172a;
+      margin: 0 0 0.75rem 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .history-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      max-height: 160px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .history-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 12px;
+      background-color: #f8fafc;
+      border: 1px solid #f1f5f9;
+      border-radius: 10px;
+      font-size: 0.85rem;
+    }
+
+    .history-date {
+      color: #94a3b8;
+      font-size: 0.75rem;
+    }
+
+    .history-amount {
+      font-weight: 700;
+      color: #0f172a;
+    }
+
+    .history-diff {
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 2px 6px;
+      border-radius: 6px;
+    }
+
+    .diff-plus { background-color: #d1fae5; color: #047857; }
+    .diff-minus { background-color: #fee2e2; color: #b91c1c; }
+
+    /* Modal / Pop-up Custom Universal */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(6px);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+      z-index: 999;
+      padding: 1rem;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal-box {
+      background: #ffffff;
+      padding: 2rem;
+      border-radius: 24px;
+      max-width: 380px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+      transform: scale(0.85);
+      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .modal-overlay.active .modal-box {
+      transform: scale(1);
+    }
+
+    .modal-icon {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 2rem;
+      margin: 0 auto 1.25rem auto;
+    }
+
+    /* Icon Variations */
+    .icon-success { background-color: #ecfdf5; color: #10b981; border: 2px solid #a7f3d0; }
+    .icon-warning { background-color: #fffbebfb; color: #f59e0b; border: 2px solid #fde68a; }
+    .icon-error   { background-color: #fef2f2; color: #dc2626; border: 2px solid #fecaca; }
+
+    .modal-title {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: #0f172a;
+      margin: 0 0 0.5rem 0;
+    }
+
+    .modal-desc {
+      font-size: 0.9rem;
+      color: #64748b;
+      margin: 0 0 1.5rem 0;
+      line-height: 1.5;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+    }
+
+    .btn-modal-primary {
+      width: 100%;
+      background-color: #10b981;
+      color: #ffffff;
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25);
+    }
+
+    .btn-modal-cancel {
+      flex: 1;
+      background-color: #f1f5f9;
+      color: #475569;
+    }
+
+    .btn-modal-confirm {
+      flex: 1.2;
+      background-color: #dc2626;
+      color: #ffffff;
+      box-shadow: 0 4px 12px rgba(220, 38, 38, 0.25);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="card">
+    <div class="card-header">
+      <span class="level-tag" id="level-tag">Level 1</span>
+      <h2>🎯 Target Nabung</h2>
+      <p>Rekening Dana Pasar Uang (RDPU)</p>
+    </div>
+
+    <div class="info-container">
+      <span class="percent-badge" id="percent-text">0%</span>
+      <span class="target-badge">Target: <b id="target-text">Rp 500.000</b></span>
+    </div>
+
+    <div class="progress-bar-bg">
+      <div class="progress-bar-fill" id="progress-fill"></div>
+    </div>
+
+    <div class="details">
+      <div class="details-row">
+        <div>Saldo RDPU:</div>
+        <div><span id="current-text">Rp 0</span></div>
+      </div>
+      <div class="details-row" style="margin-top: 4px;">
+        <div>Sisa Target:</div>
+        <div><span id="remaining-text" style="color: #64748b;">Rp 500.000</span></div>
+      </div>
+    </div>
+
+    <div class="input-group">
+      <label for="saldo-input">Masukkan Saldo Terbaru:</label>
+      <input type="text" id="saldo-input" inputmode="numeric" placeholder="Contoh: Rp 187.765">
+      
+      <div class="btn-container">
+        <button class="btn-submit" onclick="handleUpdate()">Simpan & Update</button>
+        <button class="btn-reset" onclick="triggerResetModal()">Reset 0</button>
+      </div>
+    </div>
+
+    <div class="history-section">
+      <div class="history-title">
+        <span>📜 Histori Perubahan</span>
+        <span style="font-size:0.75rem; color:#94a3b8; font-weight:normal;" id="history-count">0 Catatan</span>
+      </div>
+      <ul class="history-list" id="history-list">
+        <li style="text-align:center; color:#94a3b8; font-size:0.85rem; padding: 10px 0;">Belum ada histori transaksi</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="app-modal">
+    <div class="modal-box">
+      <div class="modal-icon" id="modal-icon">⚠️</div>
+      <h3 class="modal-title" id="modal-title">Pemberitahuan</h3>
+      <p class="modal-desc" id="modal-desc">Deskripsi notifikasi di sini.</p>
+      <div class="modal-actions" id="modal-actions">
+        <button class="btn-modal-primary" onclick="closeModal()">OK, Mengerti</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // System Target Berjenjang
+    const targetLevels = [
+      { level: 1, target: 500000, title: "Level 1 (Milestone Pertama)" },
+      { level: 2, target: 1000000, title: "Level 2 (1 Juta Pertama)" },
+      { level: 3, target: 2500000, title: "Level 3 (Checkpoint 2.5 Juta)" },
+      { level: 4, target: 5000000, title: "Level 4 (Checkpoint 5 Juta)" },
+      { level: 5, target: 10000000, title: "Level 5 (Milestone 10 Juta)" },
+      { level: 6, target: 20000000, title: "Level 6 (Target Utama 20 Juta!)" }
+    ];
+
+    let currentLevelIndex = 0;
+    const inputEl = document.getElementById('saldo-input');
+    const modalEl = document.getElementById('app-modal');
+
+    function formatRupiah(angka) {
+      return 'Rp ' + angka.toLocaleString('id-ID');
+    }
+
+    // Auto format input keyboard
+    inputEl.addEventListener('keyup', function() {
+      this.value = formatInputRupiah(this.value);
+    });
+
+    function formatInputRupiah(angka) {
+      let number_string = angka.replace(/[^,\d]/g, '').toString();
+      let split   = number_string.split(',');
+      let sisa    = split[0].length % 3;
+      let rupiah  = split[0].substr(0, sisa);
+      let ribuan  = split[0].substr(sisa).match(/\d{3}/gi);
+
+      if (ribuan) {
+        let separator = sisa ? '.' : '';
+        rupiah += separator + ribuan.join('.');
+      }
+
+      rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
+      return rupiah ? 'Rp ' + rupiah : '';
+    }
+
+    // Modal Control & Custom Types
+    function showModal(title, desc, type, isConfirmReset = false) {
+      const iconEl = document.getElementById('modal-icon');
+      const titleEl = document.getElementById('modal-title');
+      const descEl = document.getElementById('modal-desc');
+      const actionsEl = document.getElementById('modal-actions');
+
+      titleEl.innerText = title;
+      descEl.innerHTML = desc;
+
+      if (type === 'success') {
+        iconEl.className = 'modal-icon icon-success';
+        iconEl.innerText = '🎉';
+      } else if (type === 'warning') {
+        iconEl.className = 'modal-icon icon-warning';
+        iconEl.innerText = '⚠️';
+      } else if (type === 'error') {
+        iconEl.className = 'modal-icon icon-error';
+        iconEl.innerText = '❌';
+      }
+
+      if (isConfirmReset) {
+        actionsEl.innerHTML = `
+          <button class="btn-modal-cancel" onclick="closeModal()">Batal</button>
+          <button class="btn-modal-confirm" onclick="confirmReset()">Ya, Reset!</button>
+        `;
+      } else {
+        actionsEl.innerHTML = `
+          <button class="btn-modal-primary" onclick="closeModal()">OK, Siap!</button>
+        `;
+      }
+
+      modalEl.classList.add('active');
+    }
+
+    function closeModal() {
+      modalEl.classList.remove('active');
+    }
+
+    function handleUpdate() {
+      const rawVal = inputEl.value;
+      const cleanVal = rawVal.replace(/[^0-9]/g, '');
+
+      if (cleanVal === '') {
+        showModal('Input Tidak Valid!', 'Harap masukkan nominal angka yang benar sebelum menyimpan.', 'error');
+        return;
+      }
+
+      const currentAmount = parseFloat(cleanVal);
+      const savedSaldo = parseFloat(localStorage.getItem('rdpu_saldo')) || 0;
+      const diff = currentAmount - savedSaldo;
+
+      if (diff === 0) {
+        showModal('Saldo Masih Sama', 'Nominal yang kamu ketik masih sama persis dengan saldo sebelumnya.', 'warning');
+        return;
+      }
+
+      // Simpan Ke Histori
+      addHistoryItem(currentAmount, diff);
+
+      // Cek apakah naik level
+      let currentTarget = targetLevels[currentLevelIndex].target;
+      if (currentAmount >= currentTarget) {
+        renderUI(currentAmount);
+        localStorage.setItem('rdpu_saldo', currentAmount);
+        inputEl.value = '';
+
+        if (currentLevelIndex < targetLevels.length - 1) {
+          showModal('🎉 TARGET TERCAPAI! 🔥', `Selamat! Saldo kamu mencapai <b>${formatRupiah(currentAmount)}</b>. Target <b>${formatRupiah(currentTarget)}</b> telah kamu capai!`, 'success');
+        } else {
+          showModal('🏆 BINTANG UTAMA! 🔥', `Luar biasa! Kamu berhasil menembus target puncak <b>${formatRupiah(currentTarget)}</b>!`, 'success');
+        }
+        return;
+      }
+
+      if (diff < 0) {
+        showModal('Saldo Berkurang! ⚠️', `Saldo RDPU kamu terpangkas <b>${formatRupiah(Math.abs(diff))}</b> dari sebelumnya. Tetap konsisten nabungnya ya!`, 'warning');
+      } else {
+        showModal('Update Berhasil! ✅', `Saldo kamu berhasil bertambah sebesar <b>+${formatRupiah(diff)}</b>. Mantap!`, 'success');
+      }
+
+      renderUI(currentAmount);
+      localStorage.setItem('rdpu_saldo', currentAmount);
+      inputEl.value = '';
+    }
+
+    function renderUI(currentAmount) {
+      // Tentukan Level berdasarkan saldo
+      for (let i = 0; i < targetLevels.length; i++) {
+        if (currentAmount < targetLevels[i].target || i === targetLevels.length - 1) {
+          currentLevelIndex = i;
+          break;
+        }
+      }
+
+      const currentTargetObj = targetLevels[currentLevelIndex];
+      const targetAmount = currentTargetObj.target;
+
+      let percentage = (currentAmount / targetAmount) * 100;
+      if (percentage > 100) percentage = 100;
+
+      let remaining = targetAmount - currentAmount;
+      if (remaining < 0) remaining = 0;
+
+      document.getElementById('level-tag').innerText = `Level ${currentTargetObj.level}`;
+      document.getElementById('target-text').innerText = formatRupiah(targetAmount);
+      document.getElementById('progress-fill').style.width = percentage.toFixed(1) + '%';
+      document.getElementById('percent-text').innerText = percentage.toFixed(1) + '%';
+      document.getElementById('current-text').innerText = formatRupiah(currentAmount);
+      document.getElementById('remaining-text').innerText = formatRupiah(remaining);
+    }
+
+    // Fitur Histori Transaksi
+    function addHistoryItem(amount, diff) {
+      let historyArr = JSON.parse(localStorage.getItem('rdpu_history')) || [];
+      const now = new Date();
+      const dateStr = now.toLocaleDateString('id-ID', { day: '2-digit', month: 'short' }) + ' ' + now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+
+      historyArr.unshift({
+        amount: amount,
+        diff: diff,
+        date: dateStr
+      });
+
+      // Simpan max 15 riwayat terakhir
+      if (historyArr.length > 15) historyArr.pop();
+
+      localStorage.setItem('rdpu_history', JSON.stringify(historyArr));
+      renderHistoryUI();
+    }
+
+    function renderHistoryUI() {
+      let historyArr = JSON.parse(localStorage.getItem('rdpu_history')) || [];
+      const listEl = document.getElementById('history-list');
+      const countEl = document.getElementById('history-count');
+
+      countEl.innerText = `${historyArr.length} Catatan`;
+
+      if (historyArr.length === 0) {
+        listEl.innerHTML = `<li style="text-align:center; color:#94a3b8; font-size:0.85rem; padding: 10px 0;">Belum ada histori transaksi</li>`;
+        return;
+      }
+
+      let html = '';
+      historyArr.forEach(item => {
+        const isPlus = item.diff > 0;
+        const diffText = isPlus ? `+${formatRupiah(item.diff)}` : `-${formatRupiah(Math.abs(item.diff))}`;
+        const badgeClass = isPlus ? 'diff-plus' : 'diff-minus';
+
+        html += `
+          <li class="history-item">
+            <div>
+              <div class="history-amount">${formatRupiah(item.amount)}</div>
+              <div class="history-date">${item.date}</div>
+            </div>
+            <span class="history-diff ${badgeClass}">${diffText}</span>
+          </li>
+        `;
+      });
+
+      listEl.innerHTML = html;
+    }
+
+    function triggerResetModal() {
+      showModal(
+        'Konfirmasi Reset!',
+        'Apakah kamu yakin ingin mereset seluruh progres tabungan & riwayat transaksi kembali ke <b>Rp 0</b>?',
+        'warning',
+        true
+      );
+    }
+
+    function confirmReset() {
+      localStorage.removeItem('rdpu_saldo');
+      localStorage.removeItem('rdpu_history');
+      renderUI(0);
+      renderHistoryUI();
+      inputEl.value = '';
+      closeModal();
+    }
+
+    window.onload = function() {
+      const savedSaldo = localStorage.getItem('rdpu_saldo');
+      if (savedSaldo !== null) {
+        renderUI(parseFloat(savedSaldo));
+      } else {
+        renderUI(0);
+      }
+      renderHistoryUI();
+      inputEl.value = '';
+    };
+  </script>
+
+</body>
+</html>

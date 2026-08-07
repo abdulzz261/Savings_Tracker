@@ -118,19 +118,77 @@
       justify-content: space-between;
     }
 
-    .level-info-box {
-      background-color: #f0f9ff;
-      border: 1px solid #bae6fd;
-      border-radius: 12px;
-      padding: 10px 14px;
-      margin-top: 1rem;
-      font-size: 0.8rem;
-      color: #0369a1;
-      line-height: 1.4;
+    .milestone-container {
+      margin-top: 1.25rem;
+      background-color: #f8fafc;
+      border: 1px solid #f1f5f9;
+      border-radius: 16px;
+      padding: 12px;
+    }
+
+    .milestone-title {
+      font-size: 0.725rem;
+      font-weight: 800;
+      color: #64748b;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 10px;
+      text-align: center;
+    }
+
+    .milestone-stepper {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 2px;
+    }
+
+    .step-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    .step-circle {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background-color: #e2e8f0;
+      color: #64748b;
+      font-size: 0.65rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+      border: 2px solid #ffffff;
+    }
+
+    .step-item.active .step-circle {
+      background-color: #3730a3;
+      color: #ffffff;
+      box-shadow: 0 4px 8px rgba(55, 48, 163, 0.25);
+    }
+
+    .step-item.completed .step-circle {
+      background-color: #10b981;
+      color: #ffffff;
+    }
+
+    .step-label {
+      font-size: 0.625rem;
+      font-weight: 700;
+      color: #94a3b8;
+      margin-top: 4px;
+    }
+
+    .step-item.active .step-label,
+    .step-item.completed .step-label {
+      color: #0f172a;
     }
 
     .input-group {
-      margin-top: 1rem;
+      margin-top: 1.25rem;
       display: flex;
       flex-direction: column;
       gap: 0.6rem;
@@ -283,7 +341,6 @@
   <div class="card">
     <div class="card-header">
       <span class="level-badge-tag" id="level-badge">LEVEL 1</span>
-      <!-- JUDUL DASHBOARD DIAMBIL DARI INPUT USER -->
       <h2 id="dash-goal-title">🎯 Target Nabung</h2>
       <p id="dash-sub-title">Tabungan Pribadi</p>
     </div>
@@ -308,10 +365,34 @@
       </div>
     </div>
 
-    <div class="level-info-box">
-      <b>📌 Keterangan Level Milestone:</b><br>
-      • Lvl 1 (0%) | Lvl 2 (20%) | Lvl 3 (40%)<br>
-      • Lvl 4 (60%) | Lvl 5 (80%) | Lvl Max (100%)
+    <div class="milestone-container">
+      <div class="milestone-title">📌 Milestone Pencapaian Level</div>
+      <div class="milestone-stepper">
+        <div class="step-item" id="step-0">
+          <div class="step-circle" id="circle-0">1</div>
+          <div class="step-label">0%</div>
+        </div>
+        <div class="step-item" id="step-20">
+          <div class="step-circle" id="circle-20">2</div>
+          <div class="step-label">20%</div>
+        </div>
+        <div class="step-item" id="step-40">
+          <div class="step-circle" id="circle-40">3</div>
+          <div class="step-label">40%</div>
+        </div>
+        <div class="step-item" id="step-60">
+          <div class="step-circle" id="circle-60">4</div>
+          <div class="step-label">60%</div>
+        </div>
+        <div class="step-item" id="step-80">
+          <div class="step-circle" id="circle-80">5</div>
+          <div class="step-label">80%</div>
+        </div>
+        <div class="step-item" id="step-100">
+          <div class="step-circle" id="circle-100">MAX</div>
+          <div class="step-label">100%</div>
+        </div>
+      </div>
     </div>
 
     <div class="input-group">
@@ -349,7 +430,6 @@
       <div class="modal-actions" id="modal-actions"></div>
     </div>
   </div>
-
   <script>
     const inputEl = document.getElementById('saldo-input');
     const modalEl = document.getElementById('app-modal');
@@ -456,7 +536,6 @@
       const goalName = localStorage.getItem('rdpu_goal_name') || "Target Nabung";
       const targetAmount = parseFloat(localStorage.getItem('rdpu_target_custom')) || 500000;
 
-      // MENAMPILKAN NAMA TABUNGAN DI JUDUL
       document.getElementById('dash-goal-title').innerText = `🎯 ${goalName}`;
 
       let percentage = (currentAmount / targetAmount) * 100;
@@ -465,19 +544,52 @@
       let remaining = targetAmount - currentAmount;
       if (remaining < 0) remaining = 0;
 
+      const levels = [
+        { id: 0, val: 0, defaultText: '1' },
+        { id: 20, val: 20, defaultText: '2' },
+        { id: 40, val: 40, defaultText: '3' },
+        { id: 60, val: 60, defaultText: '4' },
+        { id: 80, val: 80, defaultText: '5' },
+        { id: 100, val: 100, defaultText: 'MAX' }
+      ];
+
+      levels.forEach(lvl => {
+        const stepEl = document.getElementById(`step-${lvl.id}`);
+        const circleEl = document.getElementById(`circle-${lvl.id}`);
+        if (stepEl && circleEl) {
+          stepEl.classList.remove('active', 'completed');
+          if (percentage >= lvl.val) {
+            stepEl.classList.add('completed');
+            if (lvl.val > 0 && lvl.val < 100) {
+              circleEl.innerText = '✓';
+            } else {
+              circleEl.innerText = lvl.defaultText;
+            }
+          } else {
+            circleEl.innerText = lvl.defaultText;
+          }
+        }
+      });
+
       const levelBadge = document.getElementById('level-badge');
       if (percentage >= 100) {
         levelBadge.innerText = 'LEVEL MAX (100%)';
+        document.getElementById('step-100').classList.add('active');
       } else if (percentage >= 80) {
         levelBadge.innerText = 'LEVEL 5 (80%)';
+        document.getElementById('step-80').classList.add('active');
       } else if (percentage >= 60) {
         levelBadge.innerText = 'LEVEL 4 (60%)';
+        document.getElementById('step-60').classList.add('active');
       } else if (percentage >= 40) {
         levelBadge.innerText = 'LEVEL 3 (40%)';
+        document.getElementById('step-40').classList.add('active');
       } else if (percentage >= 20) {
         levelBadge.innerText = 'LEVEL 2 (20%)';
+        document.getElementById('step-20').classList.add('active');
       } else {
         levelBadge.innerText = 'LEVEL 1 (0%)';
+        document.getElementById('step-0').classList.add('active');
       }
 
       document.getElementById('target-text').innerText = formatRupiah(targetAmount);
@@ -537,7 +649,7 @@
 
     window.onload = function() {
       if (!localStorage.getItem('rdpu_goal_name')) {
-        window.location.href = 'index.html';
+        window.location.href = '/';
         return;
       }
 

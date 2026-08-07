@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Progress Nabung - Target Utama</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: 'Plus Jakarta Sans', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background: linear-gradient(135deg, #eef2f6 0%, #e2e8f0 100%);
+      color: #0f172a;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      padding: 1.5rem 1rem;
+    }
+
+    .card {
+      background-color: #ffffff;
+      padding: 2.25rem 2rem;
+      border-radius: 24px;
+      box-shadow: 0 20px 40px -15px rgba(15, 23, 42, 0.07);
+      border: 1px solid #e2e8f0;
+      width: 100%;
+      max-width: 440px;
+    }
+
+    .card-header {
+      text-align: center;
+      margin-bottom: 1.25rem;
+    }
+
+    .level-badge-tag {
+      display: inline-block;
+      background-color: #e0e7ff;
+      color: #3730a3;
+      font-size: 0.75rem;
+      font-weight: 800;
+      padding: 4px 12px;
+      border-radius: 20px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 6px;
+    }
+
+    .card-header h2 {
+      margin: 0;
+      color: #0f172a;
+      font-size: 1.5rem;
+      font-weight: 800;
+      word-break: break-word;
+    }
+
+    .card-header p {
+      margin: 6px 0 0 0;
+      color: #64748b;
+      font-size: 0.875rem;
+    }
+
+    .info-container {
+      margin: 1.25rem 0 0.5rem 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: 700;
+      color: #334155;
+    }
+
+    .percent-badge {
+      background-color: #d1fae5;
+      color: #047857;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 0.875rem;
+    }
+
+    .target-badge {
+      color: #64748b;
+      font-size: 0.875rem;
+    }
+
+    .progress-bar-bg {
+      background-color: #f1f5f9;
+      border-radius: 16px;
+      height: 22px;
+      width: 100%;
+      overflow: hidden;
+      border: 1px solid #e2e8f0;
+    }
+
+    .progress-bar-fill {
+      background: linear-gradient(90deg, #10b981, #059669);
+      height: 100%;
+      width: 0%;
+      transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+      border-radius: 16px;
+    }
+
+    .details {
+      margin-top: 1.25rem;
+      font-size: 0.925rem;
+      line-height: 1.8;
+      color: #475569;
+      background-color: #f8fafc;
+      padding: 12px 16px;
+      border-radius: 14px;
+      border: 1px solid #f1f5f9;
+    }
+
+    .details-row {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .level-info-box {
+      background-color: #f0f9ff;
+      border: 1px solid #bae6fd;
+      border-radius: 12px;
+      padding: 10px 14px;
+      margin-top: 1rem;
+      font-size: 0.8rem;
+      color: #0369a1;
+      line-height: 1.4;
+    }
+
+    .input-group {
+      margin-top: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+
+    label {
+      font-weight: 600;
+      font-size: 0.875rem;
+      color: #334155;
+    }
+
+    input {
+      padding: 12px 16px;
+      border-radius: 12px;
+      border: 1.5px solid #cbd5e1;
+      font-size: 1rem;
+      font-weight: 600;
+      outline: none;
+      width: 100%;
+    }
+
+    input:focus {
+      border-color: #10b981;
+      box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.15);
+    }
+
+    .quick-add-group {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .btn-quick {
+      padding: 10px;
+      background-color: #f1f5f9;
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      font-size: 0.825rem;
+      font-weight: 700;
+      color: #334155;
+      cursor: pointer;
+    }
+
+    .btn-quick:hover { background-color: #e2e8f0; }
+
+    .btn-container {
+      display: flex;
+      gap: 10px;
+      margin-top: 0.5rem;
+    }
+
+    button {
+      padding: 12px 16px;
+      border-radius: 12px;
+      border: none;
+      font-weight: 700;
+      font-size: 0.925rem;
+      cursor: pointer;
+    }
+
+    .btn-submit {
+      flex: 2;
+      background-color: #10b981;
+      color: #ffffff;
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25);
+    }
+
+    .btn-reset {
+      flex: 1;
+      background-color: #fef2f2;
+      color: #dc2626;
+      border: 1px solid #fecaca;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .quick-add-group,
+    .btn-container,
+    #saldo-input {
+      animation: fadeUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    button, .btn-quick {
+      transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.2s ease;
+    }
+
+    button:active, .btn-quick:active {
+      transform: translateY(1px) scale(0.97);
+    }
+
+    .history-section {
+      margin-top: 1.75rem;
+      border-top: 1px solid #e2e8f0;
+      padding-top: 1.25rem;
+    }
+
+    .history-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .history-list {
+      list-style: none;
+      padding: 0; margin: 0.75rem 0 0 0;
+      max-height: 160px;
+      overflow-y: auto;
+      display: flex; flex-direction: column; gap: 8px;
+    }
+
+    .history-item {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 10px 12px; background-color: #f8fafc; border: 1px solid #f1f5f9;
+      border-radius: 10px; font-size: 0.85rem;
+      animation: fadeUp 0.3s ease forwards;
+    }
+
+    .history-date { color: #94a3b8; font-size: 0.75rem; }
+    .history-amount { font-weight: 700; }
+    .history-diff { font-size: 0.75rem; font-weight: 700; padding: 2px 6px; border-radius: 6px; }
+    .diff-plus { background-color: #d1fae5; color: #047857; }
+
+    .modal-overlay {
+      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+      background-color: rgba(15, 23, 42, 0.6); backdrop-filter: blur(6px);
+      display: flex; justify-content: center; align-items: center;
+      opacity: 0; pointer-events: none; transition: opacity 0.3s ease;
+      z-index: 999; padding: 1rem;
+    }
+
+    .modal-overlay.active { opacity: 1; pointer-events: auto; }
+    .modal-box { background: #ffffff; padding: 2rem; border-radius: 24px; max-width: 380px; width: 100%; text-align: center; }
+    .modal-overlay.active .modal-box { animation: fadeUp 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+    .modal-icon { width: 64px; height: 64px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 2rem; margin: 0 auto 1.25rem auto; }
+    .icon-success { background-color: #ecfdf5; color: #10b981; border: 2px solid #a7f3d0; }
+    .icon-warning { background-color: #fffbebfb; color: #f59e0b; border: 2px solid #fde68a; }
+    .icon-error   { background-color: #fef2f2; color: #dc2626; border: 2px solid #fecaca; }
+    .modal-actions { display: flex; gap: 10px; }
+    .btn-modal-primary { width: 100%; background-color: #10b981; color: #ffffff; }
+    .btn-modal-cancel { flex: 1; background-color: #f1f5f9; color: #475569; }
+    .btn-modal-confirm { flex: 1.2; background-color: #dc2626; color: #ffffff; }
+  </style>
+</head>
+<body>
+
+  <div class="card">
+    <div class="card-header">
+      <span class="level-badge-tag" id="level-badge">LEVEL 1</span>
+      <!-- JUDUL DASHBOARD DIAMBIL DARI INPUT USER -->
+      <h2 id="dash-goal-title">🎯 Target Nabung</h2>
+      <p id="dash-sub-title">Tabungan Pribadi</p>
+    </div>
+
+    <div class="info-container">
+      <span class="percent-badge" id="percent-text">0%</span>
+      <span class="target-badge">Target Utama: <b id="target-text">Rp 0</b></span>
+    </div>
+
+    <div class="progress-bar-bg">
+      <div class="progress-bar-fill" id="progress-fill"></div>
+    </div>
+
+    <div class="details">
+      <div class="details-row">
+        <div>Saldo Saat Ini:</div>
+        <div><span id="current-text">Rp 0</span></div>
+      </div>
+      <div class="details-row" style="margin-top: 4px;">
+        <div>Sisa Target:</div>
+        <div><span id="remaining-text" style="color: #64748b;">Rp 0</span></div>
+      </div>
+    </div>
+
+    <div class="level-info-box">
+      <b>📌 Keterangan Level Milestone:</b><br>
+      • Lvl 1 (0%) | Lvl 2 (20%) | Lvl 3 (40%)<br>
+      • Lvl 4 (60%) | Lvl 5 (80%) | Lvl Max (100%)
+    </div>
+
+    <div class="input-group">
+      <label>Isi Cepat:</label>
+      <div class="quick-add-group">
+        <button type="button" class="btn-quick" onclick="handleQuickAdd(15000)">+ Rp 15.000</button>
+        <button type="button" class="btn-quick" onclick="handleQuickAdd(20000)">+ Rp 20.000</button>
+      </div>
+
+      <label for="saldo-input" style="margin-top: 4px;">Tambah Nominal Tabungan:</label>
+      <input type="text" id="saldo-input" inputmode="numeric" placeholder="Contoh: Rp 187.765">
+      
+      <div class="btn-container">
+        <button type="button" class="btn-submit" onclick="handleUpdate()">Simpan & Update</button>
+        <button type="button" class="btn-reset" onclick="triggerResetModal()">Reset 0</button>
+      </div>
+    </div>
+
+    <div class="history-section">
+      <div class="history-title">
+        <span>📜 Histori Perubahan</span>
+        <span style="font-size:0.75rem; color:#94a3b8; font-weight:normal;" id="history-count">0 Catatan</span>
+      </div>
+      <ul class="history-list" id="history-list">
+        <li style="text-align:center; color:#94a3b8; font-size:0.85rem; padding: 10px 0;">Belum ada histori transaksi</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="app-modal">
+    <div class="modal-box">
+      <div class="modal-icon" id="modal-icon">⚠️</div>
+      <h3 style="margin:0 0 0.5rem 0;" id="modal-title">Pemberitahuan</h3>
+      <p style="font-size:0.9rem; color:#64748b; margin-bottom:1.5rem;" id="modal-desc"></p>
+      <div class="modal-actions" id="modal-actions"></div>
+    </div>
+  </div>
+
+  <script>
+    const inputEl = document.getElementById('saldo-input');
+    const modalEl = document.getElementById('app-modal');
+
+    function formatRupiah(angka) {
+      return 'Rp ' + Number(angka).toLocaleString('id-ID');
+    }
+
+    inputEl.addEventListener('keyup', function() {
+      let number_string = this.value.replace(/[^,\d]/g, '').toString();
+      let split   = number_string.split(',');
+      let sisa    = split[0].length % 3;
+      let rupiah  = split[0].substr(0, sisa);
+      let ribuan  = split[0].substr(sisa).match(/\d{3}/gi);
+
+      if (ribuan) {
+        let separator = sisa ? '.' : '';
+        rupiah += separator + ribuan.join('.');
+      }
+
+      rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
+      this.value = rupiah ? 'Rp ' + rupiah : '';
+    });
+
+    function showModal(title, desc, type, isConfirmReset = false, onConfirm = null) {
+      const iconEl = document.getElementById('modal-icon');
+      document.getElementById('modal-title').innerText = title;
+      document.getElementById('modal-desc').innerHTML = desc;
+
+      if (type === 'success') {
+        iconEl.className = 'modal-icon icon-success';
+        iconEl.innerText = '🎉';
+      } else if (type === 'warning') {
+        iconEl.className = 'modal-icon icon-warning';
+        iconEl.innerText = '⚠️';
+      } else if (type === 'error') {
+        iconEl.className = 'modal-icon icon-error';
+        iconEl.innerText = '❌';
+      }
+
+      const actionsEl = document.getElementById('modal-actions');
+      if (isConfirmReset) {
+        actionsEl.innerHTML = `
+          <button class="btn-modal-cancel" onclick="closeModal()">Batal</button>
+          <button class="btn-modal-confirm" id="confirmModalBtn">Ya, Lanjutkan</button>
+        `;
+        document.getElementById('confirmModalBtn').onclick = () => {
+          closeModal();
+          if (onConfirm) onConfirm();
+        };
+      } else {
+        actionsEl.innerHTML = `<button class="btn-modal-primary" onclick="closeModal()">OK, Siap!</button>`;
+      }
+
+      modalEl.classList.add('active');
+    }
+
+    function closeModal() { modalEl.classList.remove('active'); }
+
+    function addMoneyProcess(addedAmount) {
+      const savedSaldo = parseFloat(localStorage.getItem('rdpu_saldo')) || 0;
+      const newSaldo = savedSaldo + addedAmount;
+
+      addHistoryItem(newSaldo, addedAmount);
+      renderUI(newSaldo);
+      localStorage.setItem('rdpu_saldo', newSaldo);
+
+      const targetAmount = parseFloat(localStorage.getItem('rdpu_target_custom')) || 500000;
+      if (newSaldo >= targetAmount) {
+        showModal('🎉 TARGET UTAMA TERCAPAI! 🔥', `Selamat! Saldo kamu mencapai <b>${formatRupiah(newSaldo)}</b>. Target utama <b>${formatRupiah(targetAmount)}</b> telah kamu capai!`, 'success');
+      } else {
+        showModal('Berhasil Tambah! 🎉', `Saldo kamu bertambah sebesar <b>+${formatRupiah(addedAmount)}</b>.`, 'success');
+      }
+    }
+
+    function handleQuickAdd(val) {
+      showModal(
+        'Tambah Saldo Cepat',
+        `Apakah kamu yakin ingin menambahkan <b>${formatRupiah(val)}</b> ke tabungan?`,
+        'warning',
+        true,
+        () => addMoneyProcess(val)
+      );
+    }
+
+    function handleUpdate() {
+      const cleanVal = inputEl.value.replace(/[^0-9]/g, '');
+      if (cleanVal === '') {
+        showModal('Input Kosong!', 'Harap masukkan nominal angka yang ingin ditambahkan.', 'error');
+        return;
+      }
+
+      const addedAmount = parseFloat(cleanVal);
+      if (addedAmount <= 0) {
+        showModal('Input Tidak Valid!', 'Nominal tambahan harus lebih besar dari Rp 0.', 'error');
+        return;
+      }
+
+      addMoneyProcess(addedAmount);
+      inputEl.value = '';
+    }
+
+    function renderUI(currentAmount) {
+      const goalName = localStorage.getItem('rdpu_goal_name') || "Target Nabung";
+      const targetAmount = parseFloat(localStorage.getItem('rdpu_target_custom')) || 500000;
+
+      // MENAMPILKAN NAMA TABUNGAN DI JUDUL
+      document.getElementById('dash-goal-title').innerText = `🎯 ${goalName}`;
+
+      let percentage = (currentAmount / targetAmount) * 100;
+      if (percentage > 100) percentage = 100;
+
+      let remaining = targetAmount - currentAmount;
+      if (remaining < 0) remaining = 0;
+
+      const levelBadge = document.getElementById('level-badge');
+      if (percentage >= 100) {
+        levelBadge.innerText = 'LEVEL MAX (100%)';
+      } else if (percentage >= 80) {
+        levelBadge.innerText = 'LEVEL 5 (80%)';
+      } else if (percentage >= 60) {
+        levelBadge.innerText = 'LEVEL 4 (60%)';
+      } else if (percentage >= 40) {
+        levelBadge.innerText = 'LEVEL 3 (40%)';
+      } else if (percentage >= 20) {
+        levelBadge.innerText = 'LEVEL 2 (20%)';
+      } else {
+        levelBadge.innerText = 'LEVEL 1 (0%)';
+      }
+
+      document.getElementById('target-text').innerText = formatRupiah(targetAmount);
+      document.getElementById('progress-fill').style.width = percentage.toFixed(1) + '%';
+      document.getElementById('percent-text').innerText = percentage.toFixed(1) + '%';
+      document.getElementById('current-text').innerText = formatRupiah(currentAmount);
+      document.getElementById('remaining-text').innerText = formatRupiah(remaining);
+    }
+
+    function addHistoryItem(amount, diff) {
+      let historyArr = JSON.parse(localStorage.getItem('rdpu_history')) || [];
+      const now = new Date();
+      const dateStr = now.toLocaleDateString('id-ID', { day: '2-digit', month: 'short' }) + ' ' + now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+
+      historyArr.unshift({ amount: amount, diff: diff, date: dateStr });
+      if (historyArr.length > 15) historyArr.pop();
+
+      localStorage.setItem('rdpu_history', JSON.stringify(historyArr));
+      renderHistoryUI();
+    }
+
+    function renderHistoryUI() {
+      let historyArr = JSON.parse(localStorage.getItem('rdpu_history')) || [];
+      const listEl = document.getElementById('history-list');
+      document.getElementById('history-count').innerText = `${historyArr.length} Catatan`;
+
+      if (historyArr.length === 0) {
+        listEl.innerHTML = `<li style="text-align:center; color:#94a3b8; font-size:0.85rem; padding: 10px 0;">Belum ada histori transaksi</li>`;
+        return;
+      }
+
+      listEl.innerHTML = historyArr.map(item => {
+        return `
+          <li class="history-item">
+            <div>
+              <div class="history-amount">${formatRupiah(item.amount)}</div>
+              <div class="history-date">${item.date}</div>
+            </div>
+            <span class="history-diff diff-plus">+${formatRupiah(item.diff)}</span>
+          </li>
+        `;
+      }).join('');
+    }
+
+    function triggerResetModal() {
+      showModal(
+        'Konfirmasi Reset!',
+        'Apakah kamu yakin ingin mereset seluruh progres & riwayat transaksi? Kamu akan diarahkan kembali ke halaman setup.',
+        'warning',
+        true,
+        () => {
+          localStorage.clear();
+          window.location.href = 'index.html';
+        }
+      );
+    }
+
+    window.onload = function() {
+      if (!localStorage.getItem('rdpu_goal_name')) {
+        window.location.href = 'index.html';
+        return;
+      }
+
+      const savedSaldo = localStorage.getItem('rdpu_saldo');
+      renderUI(savedSaldo ? parseFloat(savedSaldo) : 0);
+      renderHistoryUI();
+    };
+  </script>
+</body>
+</html>

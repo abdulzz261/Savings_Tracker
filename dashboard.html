@@ -4,6 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Progress Nabung - Target Utama</title>
+  
+  <!-- CDN Confetti untuk Efek Perayaan -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
   <style>
     * {
       box-sizing: border-box;
@@ -98,7 +102,7 @@
       background: linear-gradient(90deg, #10b981, #059669);
       height: 100%;
       width: 0%;
-      transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: width 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
       border-radius: 16px;
     }
 
@@ -118,6 +122,7 @@
       justify-content: space-between;
     }
 
+    /* MILESTONE STEPPER UI */
     .milestone-container {
       margin-top: 1.25rem;
       background-color: #f8fafc;
@@ -315,6 +320,7 @@
     .history-diff { font-size: 0.75rem; font-weight: 700; padding: 2px 6px; border-radius: 6px; }
     .diff-plus { background-color: #d1fae5; color: #047857; }
 
+    /* Modal Overlay */
     .modal-overlay {
       position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
       background-color: rgba(15, 23, 42, 0.6); backdrop-filter: blur(6px);
@@ -433,6 +439,24 @@
   <script>
     const inputEl = document.getElementById('saldo-input');
     const modalEl = document.getElementById('app-modal');
+    let currentTargetPercentage = 0;
+    let isGoalCompletedCelebration = false;
+
+    // VALIDASI PENGAMAN BACK BUTTON HP & BFCACHE
+    function verifyGoalData() {
+      const goalName = localStorage.getItem('rdpu_goal_name');
+      if (!goalName) {
+        window.location.replace('/');
+        return false;
+      }
+      return true;
+    }
+
+    window.addEventListener('pageshow', function(event) {
+      if (event.persisted || !verifyGoalData()) {
+        window.location.replace('/');
+      }
+    });
 
     function formatRupiah(angka) {
       return 'Rp ' + Number(angka).toLocaleString('id-ID');
@@ -487,7 +511,45 @@
       modalEl.classList.add('active');
     }
 
-    function closeModal() { modalEl.classList.remove('active'); }
+    function closeModal() { 
+      modalEl.classList.remove('active'); 
+      animateProgressBar();
+
+      if (isGoalCompletedCelebration) {
+        triggerLongCelebration();
+        isGoalCompletedCelebration = false;
+      }
+    }
+
+    function animateProgressBar() {
+      const fillEl = document.getElementById('progress-fill');
+      if (fillEl) {
+        fillEl.style.width = currentTargetPercentage.toFixed(1) + '%';
+      }
+    }
+
+    // FUNGSI CONFETTI BERUNTUN (~3.5 DETIK)
+    function triggerLongCelebration() {
+      var duration = 3.5 * 1000;
+      var animationEnd = Date.now() + duration;
+      var defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 1000 };
+
+      var interval = setInterval(function() {
+        var timeLeft = animationEnd - Date.now();
+
+        if (timeLeft <= 0) {
+          return clearInterval(interval);
+        }
+
+        var particleCount = 50 * (timeLeft / duration);
+        confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } }));
+        confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } }));
+      }, 250);
+    }
+
+    function randomInRange(min, max) {
+      return Math.random() * (max - min) + min;
+    }
 
     function addMoneyProcess(addedAmount) {
       const savedSaldo = parseFloat(localStorage.getItem('rdpu_saldo')) || 0;
@@ -499,7 +561,8 @@
 
       const targetAmount = parseFloat(localStorage.getItem('rdpu_target_custom')) || 500000;
       if (newSaldo >= targetAmount) {
-        showModal('🎉 TARGET UTAMA TERCAPAI! 🔥', `Selamat! Saldo kamu mencapai <b>${formatRupiah(newSaldo)}</b>. Target utama <b>${formatRupiah(targetAmount)}</b> telah kamu capai!`, 'success');
+        isGoalCompletedCelebration = true;
+        showModal('🎉 TARGET UTAMA TERCAPAI! 🔥', `Selamat! Saldo kamu mencapai <b>${formatRupiah(newSaldo)}</b>. Target utama <b>${formatRupiah(targetAmount)}</b> telah kamu capai secara sempurna! 🚀`, 'success');
       } else {
         showModal('Berhasil Tambah! 🎉', `Saldo kamu bertambah sebesar <b>+${formatRupiah(addedAmount)}</b>.`, 'success');
       }
@@ -540,6 +603,8 @@
 
       let percentage = (currentAmount / targetAmount) * 100;
       if (percentage > 100) percentage = 100;
+
+      currentTargetPercentage = percentage;
 
       let remaining = targetAmount - currentAmount;
       if (remaining < 0) remaining = 0;
@@ -593,7 +658,6 @@
       }
 
       document.getElementById('target-text').innerText = formatRupiah(targetAmount);
-      document.getElementById('progress-fill').style.width = percentage.toFixed(1) + '%';
       document.getElementById('percent-text').innerText = percentage.toFixed(1) + '%';
       document.getElementById('current-text').innerText = formatRupiah(currentAmount);
       document.getElementById('remaining-text').innerText = formatRupiah(remaining);
@@ -648,14 +712,21 @@
     }
 
     window.onload = function() {
-      if (!localStorage.getItem('rdpu_goal_name')) {
-        window.location.href = '/';
-        return;
-      }
+      if (!verifyGoalData()) return;
+
+      history.pushState(null, null, location.href);
+      window.onpopstate = function () {
+        if (!localStorage.getItem('rdpu_goal_name')) {
+          window.location.replace('/');
+        } else {
+          history.pushState(null, null, location.href);
+        }
+      };
 
       const savedSaldo = localStorage.getItem('rdpu_saldo');
       renderUI(savedSaldo ? parseFloat(savedSaldo) : 0);
       renderHistoryUI();
+      animateProgressBar();
     };
   </script>
 </body>

@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Progress Nabung - Target Utama</title>
   
-  <!-- CDN Confetti untuk Efek Perayaan -->
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
   <style>
@@ -22,28 +21,42 @@
       align-items: center;
       min-height: 100vh;
       margin: 0;
-      padding: 1.25rem 0.85rem;
+      padding: 1rem;
     }
 
-    /* KUNCI SCROLL SAAT MODAL AKTIF */
-    body.modal-open {
-      overflow: hidden;
-    }
+    body.modal-open { overflow: hidden; }
 
     .card {
       background-color: #ffffff;
-      padding: 1.75rem 1.5rem;
-      border-radius: 24px;
-      box-shadow: 0 16px 36px -12px rgba(15, 23, 42, 0.08);
+      padding: 2.25rem 1.75rem;
+      border-radius: 28px;
+      box-shadow: 0 20px 25px -5px rgba(15, 23, 42, 0.1);
       border: 1px solid #e2e8f0;
       width: 100%;
-      max-width: 400px;
+      max-width: 500px;
+      min-height: 680px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
     }
 
-    .card-header {
+    .brand-logo {
       text-align: center;
-      margin-bottom: 1rem;
+      font-size: 1rem;
+      font-weight: 800;
+      letter-spacing: 0.1em;
+      color: #334155;
+      margin-bottom: 0.75rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid #f1f5f9;
     }
+    .brand-icon { font-size: 1.1rem; }
+
+    .card-header { text-align: center; margin-bottom: 1rem; }
 
     .level-badge-tag {
       display: inline-block;
@@ -58,19 +71,8 @@
       margin-bottom: 4px;
     }
 
-    .card-header h2 {
-      margin: 0;
-      color: #0f172a;
-      font-size: 1.35rem;
-      font-weight: 800;
-      word-break: break-word;
-    }
-
-    .card-header p {
-      margin: 4px 0 0 0;
-      color: #64748b;
-      font-size: 0.825rem;
-    }
+    .card-header h2 { margin: 0; color: #0f172a; font-size: 1.35rem; font-weight: 800; word-break: break-word; }
+    .card-header p { margin: 4px 0 0 0; color: #64748b; font-size: 0.825rem; }
 
     .info-container {
       margin: 1rem 0 0.5rem 0;
@@ -90,10 +92,7 @@
       font-weight: 800;
     }
 
-    .target-badge {
-      color: #64748b;
-      font-size: 0.825rem;
-    }
+    .target-badge { color: #64748b; font-size: 0.825rem; }
 
     .progress-bar-bg {
       background-color: #f1f5f9;
@@ -126,18 +125,8 @@
       border-radius: 14px;
     }
 
-    .detail-card-label {
-      font-size: 0.7rem;
-      font-weight: 700;
-      color: #64748b;
-      margin-bottom: 2px;
-    }
-
-    .detail-card-val {
-      font-size: 0.9rem;
-      font-weight: 800;
-      color: #0f172a;
-    }
+    .detail-card-label { font-size: 0.7rem; font-weight: 700; color: #64748b; margin-bottom: 2px; }
+    .detail-card-val { font-size: 0.9rem; font-weight: 800; color: #0f172a; }
 
     .btn-toggle-est {
       width: 100%;
@@ -157,21 +146,8 @@
       transition: all 0.2s ease;
     }
 
-    .btn-toggle-est:hover {
-      background: #e2e8f0;
-      color: #0f172a;
-    }
-
-    /* ANIMASI MASUK & KELUAR CARD ESTIMASI */
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    @keyframes fadeDown {
-      from { opacity: 1; transform: translateY(0); }
-      to { opacity: 0; transform: translateY(10px); }
-    }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes fadeDown { from { opacity: 1; transform: translateY(0); } to { opacity: 0; transform: translateY(10px); } }
 
     .est-box {
       display: none;
@@ -182,61 +158,14 @@
       padding: 12px;
     }
 
-    .est-box.active {
-      display: block;
-      animation: fadeUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-    }
-
-    .est-box.hiding {
-      display: block;
-      animation: fadeDown 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-    }
-
-    .est-title {
-      font-size: 0.725rem;
-      font-weight: 800;
-      color: #047857;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      margin-bottom: 6px;
-    }
-
-    .est-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 6px;
-      margin-bottom: 6px;
-    }
-
-    .est-card {
-      background: #ffffff;
-      border: 1px solid #a7f3d0;
-      border-radius: 10px;
-      padding: 6px 4px;
-      text-align: center;
-    }
-
-    .est-num {
-      font-size: 1rem;
-      font-weight: 800;
-      color: #065f46;
-      line-height: 1.1;
-    }
-
-    .est-label {
-      font-size: 0.625rem;
-      font-weight: 700;
-      color: #047857;
-    }
-
-    .est-quote {
-      font-size: 0.725rem;
-      color: #065f46;
-      line-height: 1.3;
-      background: rgba(255, 255, 255, 0.6);
-      padding: 6px 8px;
-      border-radius: 8px;
-    }
+    .est-box.active { display: block; animation: fadeUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+    .est-box.hiding { display: block; animation: fadeDown 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+    .est-title { font-size: 0.725rem; font-weight: 800; color: #047857; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 6px; }
+    .est-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-bottom: 6px; }
+    .est-card { background: #ffffff; border: 1px solid #a7f3d0; border-radius: 10px; padding: 6px 4px; text-align: center; }
+    .est-num { font-size: 1rem; font-weight: 800; color: #065f46; line-height: 1.1; }
+    .est-label { font-size: 0.625rem; font-weight: 700; color: #047857; }
+    .est-quote { font-size: 0.725rem; color: #065f46; line-height: 1.3; background: rgba(255, 255, 255, 0.6); padding: 6px 8px; border-radius: 8px; }
 
     .milestone-container {
       margin-top: 1rem;
@@ -246,192 +175,51 @@
       padding: 10px 8px;
     }
 
-    .milestone-title {
-      font-size: 0.7rem;
-      font-weight: 800;
-      color: #64748b;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      margin-bottom: 8px;
-      text-align: center;
-    }
+    .milestone-title { font-size: 0.7rem; font-weight: 800; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px; text-align: center; }
+    .milestone-stepper { display: grid; grid-template-columns: repeat(6, 1fr); gap: 2px; }
+    .step-item { display: flex; flex-direction: column; align-items: center; text-align: center; }
+    .step-circle { width: 24px; height: 24px; border-radius: 50%; background-color: #e2e8f0; color: #64748b; font-size: 0.625rem; font-weight: 800; display: flex; align-items: center; justify-content: center; transition: all 0.3s ease; border: 2px solid #ffffff; }
+    .step-item.active .step-circle { background-color: #3730a3; color: #ffffff; box-shadow: 0 4px 8px rgba(55, 48, 163, 0.25); }
+    .step-item.completed .step-circle { background-color: #10b981; color: #ffffff; }
+    .step-label { font-size: 0.6rem; font-weight: 700; color: #94a3b8; margin-top: 3px; }
+    .step-item.active .step-label, .step-item.completed .step-label { color: #0f172a; }
 
-    .milestone-stepper {
-      display: grid;
-      grid-template-columns: repeat(6, 1fr);
-      gap: 2px;
-    }
+    .input-group { margin-top: 1rem; display: flex; flex-direction: column; gap: 0.5rem; }
+    label { font-weight: 600; font-size: 0.825rem; color: #334155; }
+    input { padding: 10px 14px; border-radius: 12px; border: 1.5px solid #cbd5e1; font-size: 0.9rem; font-weight: 600; outline: none; width: 100%; }
+    input:focus { border-color: #10b981; box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.15); }
 
-    .step-item {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-    }
-
-    .step-circle {
-      width: 24px;
-      height: 24px;
-      border-radius: 50%;
-      background-color: #e2e8f0;
-      color: #64748b;
-      font-size: 0.625rem;
-      font-weight: 800;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.3s ease;
-      border: 2px solid #ffffff;
-    }
-
-    .step-item.active .step-circle {
-      background-color: #3730a3;
-      color: #ffffff;
-      box-shadow: 0 4px 8px rgba(55, 48, 163, 0.25);
-    }
-
-    .step-item.completed .step-circle {
-      background-color: #10b981;
-      color: #ffffff;
-    }
-
-    .step-label {
-      font-size: 0.6rem;
-      font-weight: 700;
-      color: #94a3b8;
-      margin-top: 3px;
-    }
-
-    .step-item.active .step-label,
-    .step-item.completed .step-label {
-      color: #0f172a;
-    }
-
-    .input-group {
-      margin-top: 1rem;
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-    }
-
-    label {
-      font-weight: 600;
-      font-size: 0.825rem;
-      color: #334155;
-    }
-
-    input {
-      padding: 10px 14px;
-      border-radius: 12px;
-      border: 1.5px solid #cbd5e1;
-      font-size: 0.95rem;
-      font-weight: 600;
-      outline: none;
-      width: 100%;
-    }
-
-    input:focus {
-      border-color: #10b981;
-      box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.15);
-    }
-
-    .quick-add-group {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px;
-    }
-
-    .btn-quick {
-      padding: 8px;
-      background-color: #f1f5f9;
-      border: 1px solid #e2e8f0;
-      border-radius: 10px;
-      font-size: 0.8rem;
-      font-weight: 700;
-      color: #334155;
-      cursor: pointer;
-    }
-
+    .quick-add-group { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .btn-quick { padding: 8px; background-color: #f1f5f9; border: 1px solid #e2e8f0; border-radius: 10px; font-size: 0.8rem; font-weight: 700; color: #334155; cursor: pointer; }
     .btn-quick:hover { background-color: #e2e8f0; }
 
-    .btn-container {
-      display: flex;
-      gap: 8px;
-      margin-top: 0.25rem;
-    }
+    .btn-container { display: flex; gap: 8px; margin-top: 0.25rem; }
+    button { padding: 11px 14px; border-radius: 12px; border: none; font-weight: 700; font-size: 0.85rem; cursor: pointer; transition: transform 0.1s; }
+    button:active { transform: scale(0.97); }
 
-    button {
-      padding: 11px 14px;
-      border-radius: 12px;
-      border: none;
-      font-weight: 700;
-      font-size: 0.875rem;
-      cursor: pointer;
-    }
+    .btn-submit { flex: 2; background-color: #10b981; color: #ffffff; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25); }
+    .btn-withdraw { flex: 1.5; background-color: #f59e0b; color: #ffffff; box-shadow: 0 4px 12px rgba(245, 158, 11, 0.2); }
+    .btn-reset { flex: 1; background-color: #fef2f2; color: #dc2626; border: 1px solid #fecaca; }
 
-    .btn-submit {
-      flex: 2;
-      background-color: #10b981;
-      color: #ffffff;
-      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25);
-    }
+    .history-section { margin-top: 1.25rem; border-top: 1px solid #e2e8f0; padding-top: 1rem; }
+    .history-title { font-size: 0.875rem; font-weight: 700; display: flex; justify-content: space-between; }
+    .history-list { list-style: none; padding: 0; margin: 0.5rem 0 0 0; max-height: 220px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; }
 
-    .btn-reset {
-      flex: 1;
-      background-color: #fef2f2;
-      color: #dc2626;
-      border: 1px solid #fecaca;
-    }
-
-    .history-section {
-      margin-top: 1.25rem;
-      border-top: 1px solid #e2e8f0;
-      padding-top: 1rem;
-    }
-
-    .history-title {
-      font-size: 0.875rem;
-      font-weight: 700;
-      display: flex;
-      justify-content: space-between;
-    }
-
-    .history-list {
-      list-style: none;
-      padding: 0; margin: 0.5rem 0 0 0;
-      max-height: 140px;
-      overflow-y: auto;
-      display: flex; flex-direction: column; gap: 6px;
-    }
-
-    .history-item {
-      display: flex; justify-content: space-between; align-items: center;
-      padding: 8px 10px; background-color: #f8fafc; border: 1px solid #f1f5f9;
-      border-radius: 10px; font-size: 0.8rem;
-      animation: fadeUp 0.3s ease forwards;
-    }
-
-    .history-date { color: #94a3b8; font-size: 0.7rem; }
-    .history-amount { font-weight: 700; }
-    .history-diff { font-size: 0.7rem; font-weight: 700; padding: 2px 6px; border-radius: 6px; }
+    .history-item { display: flex; justify-content: space-between; align-items: center; padding: 8px 10px; background-color: #f8fafc; border: 1px solid #f1f5f9; border-radius: 10px; font-size: 0.8rem; animation: fadeUp 0.3s ease forwards; }
+    .history-note { font-weight: 700; color: #1e293b; font-size: 0.825rem; }
+    .history-date { color: #94a3b8; font-size: 0.675rem; }
+    .history-diff { font-size: 0.725rem; font-weight: 800; padding: 3px 8px; border-radius: 6px; }
     .diff-plus { background-color: #d1fae5; color: #047857; }
+    .diff-minus { background-color: #fee2e2; color: #b91c1c; }
 
-    /* Modal Overlay */
-    .modal-overlay {
-      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-      background-color: rgba(15, 23, 42, 0.6); backdrop-filter: blur(6px);
-      display: flex; justify-content: center; align-items: center;
-      opacity: 0; pointer-events: none; transition: opacity 0.3s ease;
-      z-index: 999; padding: 1rem;
-    }
-
+    .modal-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: rgba(15, 23, 42, 0.6); backdrop-filter: blur(6px); display: flex; justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; z-index: 999; padding: 1rem; }
     .modal-overlay.active { opacity: 1; pointer-events: auto; }
     .modal-box { background: #ffffff; padding: 1.75rem 1.5rem; border-radius: 22px; max-width: 360px; width: 100%; text-align: center; }
     .modal-overlay.active .modal-box { animation: fadeUp 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
     .modal-icon { width: 56px; height: 56px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 1.75rem; margin: 0 auto 1rem auto; }
     .icon-success { background-color: #ecfdf5; color: #10b981; border: 2px solid #a7f3d0; }
     .icon-warning { background-color: #fffbebfb; color: #f59e0b; border: 2px solid #fde68a; }
-    .icon-error   { background-color: #fef2f2; color: #dc2626; border: 2px solid #fecaca; }
+    .icon-error { background-color: #fef2f2; color: #dc2626; border: 2px solid #fecaca; }
     .modal-actions { display: flex; gap: 8px; }
     .btn-modal-primary { width: 100%; background-color: #10b981; color: #ffffff; }
     .btn-modal-cancel { flex: 1; background-color: #f1f5f9; color: #475569; }
@@ -441,6 +229,10 @@
 <body>
 
   <div class="card">
+    <div class="brand-logo">
+      <span class="brand-icon">💰</span> TABUNGANKU
+    </div>
+
     <div class="card-header">
       <span class="level-badge-tag" id="level-badge">LEVEL 1</span>
       <h2 id="dash-goal-title">🎯 Target Nabung</h2>
@@ -474,51 +266,22 @@
     <div class="est-box" id="est-box">
       <div class="est-title">⏱️ Analisis Sisa Waktu Nabung</div>
       <div class="est-grid">
-        <div class="est-card">
-          <div class="est-num" id="est-days">0</div>
-          <div class="est-label">Hari Lagi</div>
-        </div>
-        <div class="est-card">
-          <div class="est-num" id="est-weeks">0</div>
-          <div class="est-label">Minggu</div>
-        </div>
-        <div class="est-card">
-          <div class="est-num" id="est-months">0</div>
-          <div class="est-label">Bulan</div>
-        </div>
+        <div class="est-card"><div class="est-num" id="est-days">0</div><div class="est-label">Hari Lagi</div></div>
+        <div class="est-card"><div class="est-num" id="est-weeks">0</div><div class="est-label">Minggu</div></div>
+        <div class="est-card"><div class="est-num" id="est-months">0</div><div class="est-label">Bulan</div></div>
       </div>
-      <div class="est-quote" id="est-quote">
-        💡 <i>Setiap rupiah mendekatkanmu pada impian!</i>
-      </div>
+      <div class="est-quote" id="est-quote">💡 <i>Setiap rupiah mendekatkanmu pada impian!</i></div>
     </div>
 
     <div class="milestone-container">
       <div class="milestone-title">📌 Milestone Pencapaian Level</div>
       <div class="milestone-stepper">
-        <div class="step-item" id="step-0">
-          <div class="step-circle" id="circle-0">1</div>
-          <div class="step-label">0%</div>
-        </div>
-        <div class="step-item" id="step-20">
-          <div class="step-circle" id="circle-20">2</div>
-          <div class="step-label">20%</div>
-        </div>
-        <div class="step-item" id="step-40">
-          <div class="step-circle" id="circle-40">3</div>
-          <div class="step-label">40%</div>
-        </div>
-        <div class="step-item" id="step-60">
-          <div class="step-circle" id="circle-60">4</div>
-          <div class="step-label">60%</div>
-        </div>
-        <div class="step-item" id="step-80">
-          <div class="step-circle" id="circle-80">5</div>
-          <div class="step-label">80%</div>
-        </div>
-        <div class="step-item" id="step-100">
-          <div class="step-circle" id="circle-100">MAX</div>
-          <div class="step-label">100%</div>
-        </div>
+        <div class="step-item" id="step-0"><div class="step-circle" id="circle-0">1</div><div class="step-label">0%</div></div>
+        <div class="step-item" id="step-20"><div class="step-circle" id="circle-20">2</div><div class="step-label">20%</div></div>
+        <div class="step-item" id="step-40"><div class="step-circle" id="circle-40">3</div><div class="step-label">40%</div></div>
+        <div class="step-item" id="step-60"><div class="step-circle" id="circle-60">4</div><div class="step-label">60%</div></div>
+        <div class="step-item" id="step-80"><div class="step-circle" id="circle-80">5</div><div class="step-label">80%</div></div>
+        <div class="step-item" id="step-100"><div class="step-circle" id="circle-100">MAX</div><div class="step-label">100%</div></div>
       </div>
     </div>
 
@@ -529,12 +292,16 @@
         <button type="button" class="btn-quick" onclick="handleQuickAdd(20000)">+ Rp 20.000</button>
       </div>
 
-      <label for="saldo-input" style="margin-top: 2px;">Tambah Nominal Tabungan:</label>
-      <input type="text" id="saldo-input" inputmode="numeric" placeholder="Contoh: Rp 180.000">
+      <label for="saldo-input" style="margin-top: 2px;">Nominal Transaksi:</label>
+      <input type="text" id="saldo-input" inputmode="numeric" placeholder="Contoh: Rp 50.000">
+
+      <label for="note-input" style="margin-top: 2px;">Catatan/Keterangan (Opsional):</label>
+      <input type="text" id="note-input" placeholder="Misal: Uang saku, Beli kuota...">
       
       <div class="btn-container">
-        <button type="button" class="btn-submit" onclick="handleUpdate()">Simpan & Update</button>
-        <button type="button" class="btn-reset" onclick="triggerResetModal()">Reset 0</button>
+        <button type="button" class="btn-submit" onclick="handleUpdate('deposit')">Nabung (+)</button>
+        <button type="button" class="btn-withdraw" onclick="handleUpdate('withdraw')">Tarik (-)</button>
+        <button type="button" class="btn-reset" onclick="triggerResetModal()">Reset</button>
       </div>
     </div>
 
@@ -559,6 +326,7 @@
   </div>
   <script>
     const inputEl = document.getElementById('saldo-input');
+    const noteEl = document.getElementById('note-input');
     const modalEl = document.getElementById('app-modal');
     let currentTargetPercentage = 0;
     let isGoalCompletedCelebration = false;
@@ -566,42 +334,29 @@
 
     function verifyGoalData() {
       const goalName = localStorage.getItem('rdpu_goal_name');
-      if (!goalName) {
-        window.location.replace('/');
-        return false;
-      }
+      if (!goalName) { window.location.replace('/'); return false; }
       return true;
     }
 
     window.addEventListener('pageshow', function(event) {
-      if (event.persisted || !verifyGoalData()) {
-        window.location.replace('/');
-      }
+      if (event.persisted || !verifyGoalData()) { window.location.replace('/'); }
     });
 
-    function formatRupiah(angka) {
-      return 'Rp ' + Number(angka).toLocaleString('id-ID');
-    }
+    function formatRupiah(angka) { return 'Rp ' + Number(angka).toLocaleString('id-ID'); }
 
     inputEl.addEventListener('keyup', function() {
       let number_string = this.value.replace(/[^,\d]/g, '').toString();
-      let split   = number_string.split(',');
-      let sisa    = split[0].length % 3;
-      let rupiah  = split[0].substr(0, sisa);
-      let ribuan  = split[0].substr(sisa).match(/\d{3}/gi);
-
-      if (ribuan) {
-        let separator = sisa ? '.' : '';
-        rupiah += separator + ribuan.join('.');
-      }
-
+      let split = number_string.split(',');
+      let sisa = split[0].length % 3;
+      let rupiah = split[0].substr(0, sisa);
+      let ribuan = split[0].substr(sisa).match(/\d{3}/gi);
+      if (ribuan) { let separator = sisa ? '.' : ''; rupiah += separator + ribuan.join('.'); }
       rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
       this.value = rupiah ? 'Rp ' + rupiah : '';
     });
 
     function toggleEstimasi() {
       if (isEstimasiAnimating) return;
-
       const box = document.getElementById('est-box');
       const btnText = document.getElementById('btn-est-text');
       const btnIcon = document.getElementById('btn-est-icon');
@@ -610,19 +365,12 @@
         isEstimasiAnimating = true;
         box.classList.remove('active');
         box.classList.add('hiding');
-
         btnText.innerText = 'Lihat Estimasi Sisa Waktu';
         btnIcon.innerText = '⏳';
-
-        setTimeout(() => {
-          box.classList.remove('hiding');
-          isEstimasiAnimating = false;
-        }, 250);
-
+        setTimeout(() => { box.classList.remove('hiding'); isEstimasiAnimating = false; }, 250);
       } else {
         box.classList.remove('hiding');
         box.classList.add('active');
-
         btnText.innerText = 'Sembunyikan Estimasi';
         btnIcon.innerText = '🙈';
       }
@@ -633,16 +381,9 @@
       document.getElementById('modal-title').innerText = title;
       document.getElementById('modal-desc').innerHTML = desc;
 
-      if (type === 'success') {
-        iconEl.className = 'modal-icon icon-success';
-        iconEl.innerText = '🎉';
-      } else if (type === 'warning') {
-        iconEl.className = 'modal-icon icon-warning';
-        iconEl.innerText = '⚠️';
-      } else if (type === 'error') {
-        iconEl.className = 'modal-icon icon-error';
-        iconEl.innerText = '❌';
-      }
+      if (type === 'success') { iconEl.className = 'modal-icon icon-success'; iconEl.innerText = '🎉'; }
+      else if (type === 'warning') { iconEl.className = 'modal-icon icon-warning'; iconEl.innerText = '⚠️'; }
+      else if (type === 'error') { iconEl.className = 'modal-icon icon-error'; iconEl.innerText = '❌'; }
 
       const actionsEl = document.getElementById('modal-actions');
       if (isConfirmReset) {
@@ -650,14 +391,10 @@
           <button class="btn-modal-cancel" onclick="closeModal()">Batal</button>
           <button class="btn-modal-confirm" id="confirmModalBtn">Ya, Lanjutkan</button>
         `;
-        document.getElementById('confirmModalBtn').onclick = () => {
-          closeModal();
-          if (onConfirm) onConfirm();
-        };
+        document.getElementById('confirmModalBtn').onclick = () => { closeModal(); if (onConfirm) onConfirm(); };
       } else {
         actionsEl.innerHTML = `<button class="btn-modal-primary" onclick="closeModal()">OK, Siap!</button>`;
       }
-
       modalEl.classList.add('active');
       document.body.classList.add('modal-open');
     }
@@ -666,54 +403,64 @@
       modalEl.classList.remove('active'); 
       document.body.classList.remove('modal-open');
       animateProgressBar();
-
-      if (isGoalCompletedCelebration) {
-        triggerLongCelebration();
-        isGoalCompletedCelebration = false;
-      }
+      if (isGoalCompletedCelebration) { triggerLongCelebration(); isGoalCompletedCelebration = false; }
     }
 
     function animateProgressBar() {
       const fillEl = document.getElementById('progress-fill');
-      if (fillEl) {
-        fillEl.style.width = currentTargetPercentage.toFixed(1) + '%';
-      }
+      if (fillEl) fillEl.style.width = currentTargetPercentage.toFixed(1) + '%';
     }
 
     function triggerLongCelebration() {
       var duration = 3.5 * 1000;
       var animationEnd = Date.now() + duration;
       var defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 1000 };
-
       var interval = setInterval(function() {
         var timeLeft = animationEnd - Date.now();
         if (timeLeft <= 0) return clearInterval(interval);
-
         var particleCount = 50 * (timeLeft / duration);
         confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } }));
         confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } }));
       }, 250);
     }
 
-    function randomInRange(min, max) {
-      return Math.random() * (max - min) + min;
-    }
+    function randomInRange(min, max) { return Math.random() * (max - min) + min; }
 
-    function addMoneyProcess(addedAmount) {
+    function addMoneyProcess(amount, type, noteText = '') {
       const savedSaldo = parseFloat(localStorage.getItem('rdpu_saldo')) || 0;
-      const newSaldo = savedSaldo + addedAmount;
+      let newSaldo = savedSaldo;
 
-      addHistoryItem(newSaldo, addedAmount);
+      if (type === 'deposit') {
+        newSaldo += amount;
+      } else if (type === 'withdraw') {
+        if (amount > savedSaldo) {
+          showModal('Saldo Tidak Cukup!', `Kamu ingin menarik <b>${formatRupiah(amount)}</b>, tapi saldo saat ini cuma <b>${formatRupiah(savedSaldo)}</b>.`, 'error');
+          return;
+        }
+        newSaldo -= amount;
+      }
+
+      const defaultNote = type === 'deposit' ? 'Setoran Tabungan' : 'Penarikan Saldo';
+      const finalNote = noteText.trim() !== '' ? noteText.trim() : defaultNote;
+
+      addHistoryItem(newSaldo, amount, type, finalNote);
       renderUI(newSaldo);
       localStorage.setItem('rdpu_saldo', newSaldo);
 
       const targetAmount = parseFloat(localStorage.getItem('rdpu_target_custom')) || 500000;
-      if (newSaldo >= targetAmount) {
-        isGoalCompletedCelebration = true;
-        showModal('🎉 TARGET UTAMA TERCAPAI! 🔥', `Selamat! Saldo kamu mencapai <b>${formatRupiah(newSaldo)}</b>. Target utama <b>${formatRupiah(targetAmount)}</b> telah kamu capai secara sempurna! 🚀`, 'success');
+      if (type === 'deposit') {
+        if (newSaldo >= targetAmount) {
+          isGoalCompletedCelebration = true;
+          showModal('🎉 TARGET UTAMA TERCAPAI! 🔥', `Selamat! Saldo kamu mencapai <b>${formatRupiah(newSaldo)}</b>. Target utama <b>${formatRupiah(targetAmount)}</b> telah kamu capai secara sempurna! 🚀`, 'success');
+        } else {
+          showModal('Berhasil Nabung! 🎉', `Saldo bertambah <b>+${formatRupiah(amount)}</b> (${finalNote}).`, 'success');
+        }
       } else {
-        showModal('Berhasil Tambah! 🎉', `Saldo kamu bertambah sebesar <b>+${formatRupiah(addedAmount)}</b>.`, 'success');
+        showModal('Penarikan Berhasil! 💸', `Saldo berkurang <b>-${formatRupiah(amount)}</b> (${finalNote}).`, 'warning');
       }
+
+      inputEl.value = '';
+      noteEl.value = '';
     }
 
     function handleQuickAdd(val) {
@@ -722,32 +469,31 @@
         `Apakah kamu yakin ingin menambahkan <b>${formatRupiah(val)}</b> ke tabungan?`,
         'warning',
         true,
-        () => addMoneyProcess(val)
+        () => addMoneyProcess(val, 'deposit', 'Isi Cepat')
       );
     }
 
-    function handleUpdate() {
+    function handleUpdate(type) {
       const cleanVal = inputEl.value.replace(/[^0-9]/g, '');
       if (cleanVal === '') {
-        showModal('Input Kosong!', 'Harap masukkan nominal angka yang ingin ditambahkan.', 'error');
+        showModal('Input Kosong!', 'Harap masukkan nominal angka terlebih dahulu.', 'error');
         return;
       }
 
-      const addedAmount = parseFloat(cleanVal);
-      if (addedAmount <= 0) {
-        showModal('Input Tidak Valid!', 'Nominal tambahan harus lebih besar dari Rp 0.', 'error');
+      const amount = parseFloat(cleanVal);
+      if (amount <= 0) {
+        showModal('Input Tidak Valid!', 'Nominal transaksi harus lebih besar dari Rp 0.', 'error');
         return;
       }
 
-      addMoneyProcess(addedAmount);
-      inputEl.value = '';
+      const noteText = noteEl.value;
+      addMoneyProcess(amount, type, noteText);
     }
 
     function renderUI(currentAmount) {
       const goalName = localStorage.getItem('rdpu_goal_name') || "Target Nabung";
       const targetAmount = parseFloat(localStorage.getItem('rdpu_target_custom')) || 500000;
       
-      // MENGAMBIL DATA SETTINGAN DARI INDEX.HTML
       const freq = localStorage.getItem('rdpu_freq') || 'hari';
       const daySubMode = localStorage.getItem('rdpu_daySubMode') || 'everyday';
       const period = parseFloat(localStorage.getItem('rdpu_periodAmount')) || 20000;
@@ -757,13 +503,11 @@
 
       let percentage = (currentAmount / targetAmount) * 100;
       if (percentage > 100) percentage = 100;
-
       currentTargetPercentage = percentage;
 
       let remaining = targetAmount - currentAmount;
       if (remaining < 0) remaining = 0;
 
-      // HITUNG ESTIMASI DINAMIS DENGAN HARI CUSTOM & FREKUENSI
       let daysLeft = 0;
       let totalTimesNeeded = Math.ceil(remaining / period);
 
@@ -818,11 +562,7 @@
           stepEl.classList.remove('active', 'completed');
           if (percentage >= lvl.val) {
             stepEl.classList.add('completed');
-            if (lvl.val > 0 && lvl.val < 100) {
-              circleEl.innerText = '✓';
-            } else {
-              circleEl.innerText = lvl.defaultText;
-            }
+            circleEl.innerText = (lvl.val > 0 && lvl.val < 100) ? '✓' : lvl.defaultText;
           } else {
             circleEl.innerText = lvl.defaultText;
           }
@@ -830,25 +570,12 @@
       });
 
       const levelBadge = document.getElementById('level-badge');
-      if (percentage >= 100) {
-        levelBadge.innerText = 'LEVEL MAX (100%)';
-        document.getElementById('step-100').classList.add('active');
-      } else if (percentage >= 80) {
-        levelBadge.innerText = 'LEVEL 5 (80%)';
-        document.getElementById('step-80').classList.add('active');
-      } else if (percentage >= 60) {
-        levelBadge.innerText = 'LEVEL 4 (60%)';
-        document.getElementById('step-60').classList.add('active');
-      } else if (percentage >= 40) {
-        levelBadge.innerText = 'LEVEL 3 (40%)';
-        document.getElementById('step-40').classList.add('active');
-      } else if (percentage >= 20) {
-        levelBadge.innerText = 'LEVEL 2 (20%)';
-        document.getElementById('step-20').classList.add('active');
-      } else {
-        levelBadge.innerText = 'LEVEL 1 (0%)';
-        document.getElementById('step-0').classList.add('active');
-      }
+      if (percentage >= 100) { levelBadge.innerText = 'LEVEL MAX (100%)'; document.getElementById('step-100').classList.add('active'); }
+      else if (percentage >= 80) { levelBadge.innerText = 'LEVEL 5 (80%)'; document.getElementById('step-80').classList.add('active'); }
+      else if (percentage >= 60) { levelBadge.innerText = 'LEVEL 4 (60%)'; document.getElementById('step-60').classList.add('active'); }
+      else if (percentage >= 40) { levelBadge.innerText = 'LEVEL 3 (40%)'; document.getElementById('step-40').classList.add('active'); }
+      else if (percentage >= 20) { levelBadge.innerText = 'LEVEL 2 (20%)'; document.getElementById('step-20').classList.add('active'); }
+      else { levelBadge.innerText = 'LEVEL 1 (0%)'; document.getElementById('step-0').classList.add('active'); }
 
       document.getElementById('target-text').innerText = formatRupiah(targetAmount);
       document.getElementById('percent-text').innerText = percentage.toFixed(1) + '%';
@@ -856,13 +583,13 @@
       document.getElementById('remaining-text').innerText = formatRupiah(remaining);
     }
 
-    function addHistoryItem(amount, diff) {
+    function addHistoryItem(totalSaldo, amount, type, note) {
       let historyArr = JSON.parse(localStorage.getItem('rdpu_history')) || [];
       const now = new Date();
       const dateStr = now.toLocaleDateString('id-ID', { day: '2-digit', month: 'short' }) + ' ' + now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
 
-      historyArr.unshift({ amount: amount, diff: diff, date: dateStr });
-      if (historyArr.length > 15) historyArr.pop();
+      historyArr.unshift({ amount: totalSaldo, diff: amount, type: type, note: note, date: dateStr });
+      if (historyArr.length > 20) historyArr.pop();
 
       localStorage.setItem('rdpu_history', JSON.stringify(historyArr));
       renderHistoryUI();
@@ -879,13 +606,18 @@
       }
 
       listEl.innerHTML = historyArr.map(item => {
+        const isPlus = item.type !== 'withdraw';
+        const badgeClass = isPlus ? 'diff-plus' : 'diff-minus';
+        const sign = isPlus ? '+' : '-';
+        const noteText = item.note || (isPlus ? 'Setoran' : 'Penarikan');
+
         return `
           <li class="history-item">
             <div>
-              <div class="history-amount">${formatRupiah(item.amount)}</div>
-              <div class="history-date">${item.date}</div>
+              <div class="history-note">${noteText}</div>
+              <div class="history-date">${item.date} • Saldo: ${formatRupiah(item.amount)}</div>
             </div>
-            <span class="history-diff diff-plus">+${formatRupiah(item.diff)}</span>
+            <span class="history-diff ${badgeClass}">${sign}${formatRupiah(item.diff)}</span>
           </li>
         `;
       }).join('');
@@ -909,11 +641,8 @@
 
       history.pushState(null, null, location.href);
       window.onpopstate = function () {
-        if (!localStorage.getItem('rdpu_goal_name')) {
-          window.location.replace('/');
-        } else {
-          history.pushState(null, null, location.href);
-        }
+        if (!localStorage.getItem('rdpu_goal_name')) { window.location.replace('/'); }
+        else { history.pushState(null, null, location.href); }
       };
 
       const savedSaldo = localStorage.getItem('rdpu_saldo');

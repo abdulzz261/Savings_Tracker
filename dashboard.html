@@ -22,53 +22,58 @@
       align-items: center;
       min-height: 100vh;
       margin: 0;
-      padding: 1.5rem 1rem;
+      padding: 1.25rem 0.85rem;
+    }
+
+    /* KUNCI SCROLL SAAT MODAL AKTIF */
+    body.modal-open {
+      overflow: hidden;
     }
 
     .card {
       background-color: #ffffff;
-      padding: 2.25rem 2rem;
+      padding: 1.75rem 1.5rem;
       border-radius: 24px;
-      box-shadow: 0 20px 40px -15px rgba(15, 23, 42, 0.07);
+      box-shadow: 0 16px 36px -12px rgba(15, 23, 42, 0.08);
       border: 1px solid #e2e8f0;
       width: 100%;
-      max-width: 440px;
+      max-width: 400px;
     }
 
     .card-header {
       text-align: center;
-      margin-bottom: 1.25rem;
+      margin-bottom: 1rem;
     }
 
     .level-badge-tag {
       display: inline-block;
       background-color: #e0e7ff;
       color: #3730a3;
-      font-size: 0.75rem;
+      font-size: 0.7rem;
       font-weight: 800;
-      padding: 4px 12px;
+      padding: 4px 10px;
       border-radius: 20px;
       text-transform: uppercase;
       letter-spacing: 0.05em;
-      margin-bottom: 6px;
+      margin-bottom: 4px;
     }
 
     .card-header h2 {
       margin: 0;
       color: #0f172a;
-      font-size: 1.5rem;
+      font-size: 1.35rem;
       font-weight: 800;
       word-break: break-word;
     }
 
     .card-header p {
-      margin: 6px 0 0 0;
+      margin: 4px 0 0 0;
       color: #64748b;
-      font-size: 0.875rem;
+      font-size: 0.825rem;
     }
 
     .info-container {
-      margin: 1.25rem 0 0.5rem 0;
+      margin: 1rem 0 0.5rem 0;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -79,20 +84,21 @@
     .percent-badge {
       background-color: #d1fae5;
       color: #047857;
-      padding: 4px 10px;
-      border-radius: 20px;
-      font-size: 0.875rem;
+      padding: 3px 10px;
+      border-radius: 12px;
+      font-size: 0.825rem;
+      font-weight: 800;
     }
 
     .target-badge {
       color: #64748b;
-      font-size: 0.875rem;
+      font-size: 0.825rem;
     }
 
     .progress-bar-bg {
       background-color: #f1f5f9;
       border-radius: 16px;
-      height: 22px;
+      height: 20px;
       width: 100%;
       overflow: hidden;
       border: 1px solid #e2e8f0;
@@ -107,37 +113,146 @@
     }
 
     .details {
-      margin-top: 1.25rem;
-      font-size: 0.925rem;
-      line-height: 1.8;
-      color: #475569;
+      margin-top: 1rem;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .detail-card-item {
       background-color: #f8fafc;
-      padding: 12px 16px;
+      border: 1px solid #f1f5f9;
+      padding: 10px 12px;
       border-radius: 14px;
-      border: 1px solid #f1f5f9;
     }
 
-    .details-row {
+    .detail-card-label {
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: #64748b;
+      margin-bottom: 2px;
+    }
+
+    .detail-card-val {
+      font-size: 0.9rem;
+      font-weight: 800;
+      color: #0f172a;
+    }
+
+    .btn-toggle-est {
+      width: 100%;
+      margin-top: 8px;
+      background: #f1f5f9;
+      color: #334155;
+      border: 1px solid #e2e8f0;
+      padding: 8px 10px;
+      border-radius: 12px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      cursor: pointer;
       display: flex;
-      justify-content: space-between;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: all 0.2s ease;
     }
 
-    /* MILESTONE STEPPER UI */
-    .milestone-container {
-      margin-top: 1.25rem;
-      background-color: #f8fafc;
-      border: 1px solid #f1f5f9;
+    .btn-toggle-est:hover {
+      background: #e2e8f0;
+      color: #0f172a;
+    }
+
+    /* ANIMASI MASUK & KELUAR CARD ESTIMASI */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeDown {
+      from { opacity: 1; transform: translateY(0); }
+      to { opacity: 0; transform: translateY(10px); }
+    }
+
+    .est-box {
+      display: none;
+      margin-top: 8px;
+      background: linear-gradient(135deg, #f0fdf4 0%, #e6fffa 100%);
+      border: 1px solid #a7f3d0;
       border-radius: 16px;
       padding: 12px;
     }
 
-    .milestone-title {
+    .est-box.active {
+      display: block;
+      animation: fadeUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    .est-box.hiding {
+      display: block;
+      animation: fadeDown 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    .est-title {
       font-size: 0.725rem;
+      font-weight: 800;
+      color: #047857;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 6px;
+    }
+
+    .est-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px;
+      margin-bottom: 6px;
+    }
+
+    .est-card {
+      background: #ffffff;
+      border: 1px solid #a7f3d0;
+      border-radius: 10px;
+      padding: 6px 4px;
+      text-align: center;
+    }
+
+    .est-num {
+      font-size: 1rem;
+      font-weight: 800;
+      color: #065f46;
+      line-height: 1.1;
+    }
+
+    .est-label {
+      font-size: 0.625rem;
+      font-weight: 700;
+      color: #047857;
+    }
+
+    .est-quote {
+      font-size: 0.725rem;
+      color: #065f46;
+      line-height: 1.3;
+      background: rgba(255, 255, 255, 0.6);
+      padding: 6px 8px;
+      border-radius: 8px;
+    }
+
+    .milestone-container {
+      margin-top: 1rem;
+      background-color: #f8fafc;
+      border: 1px solid #f1f5f9;
+      border-radius: 16px;
+      padding: 10px 8px;
+    }
+
+    .milestone-title {
+      font-size: 0.7rem;
       font-weight: 800;
       color: #64748b;
       text-transform: uppercase;
       letter-spacing: 0.05em;
-      margin-bottom: 10px;
+      margin-bottom: 8px;
       text-align: center;
     }
 
@@ -155,12 +270,12 @@
     }
 
     .step-circle {
-      width: 26px;
-      height: 26px;
+      width: 24px;
+      height: 24px;
       border-radius: 50%;
       background-color: #e2e8f0;
       color: #64748b;
-      font-size: 0.65rem;
+      font-size: 0.625rem;
       font-weight: 800;
       display: flex;
       align-items: center;
@@ -181,10 +296,10 @@
     }
 
     .step-label {
-      font-size: 0.625rem;
+      font-size: 0.6rem;
       font-weight: 700;
       color: #94a3b8;
-      margin-top: 4px;
+      margin-top: 3px;
     }
 
     .step-item.active .step-label,
@@ -193,23 +308,23 @@
     }
 
     .input-group {
-      margin-top: 1.25rem;
+      margin-top: 1rem;
       display: flex;
       flex-direction: column;
-      gap: 0.6rem;
+      gap: 0.5rem;
     }
 
     label {
       font-weight: 600;
-      font-size: 0.875rem;
+      font-size: 0.825rem;
       color: #334155;
     }
 
     input {
-      padding: 12px 16px;
+      padding: 10px 14px;
       border-radius: 12px;
       border: 1.5px solid #cbd5e1;
-      font-size: 1rem;
+      font-size: 0.95rem;
       font-weight: 600;
       outline: none;
       width: 100%;
@@ -227,11 +342,11 @@
     }
 
     .btn-quick {
-      padding: 10px;
+      padding: 8px;
       background-color: #f1f5f9;
       border: 1px solid #e2e8f0;
       border-radius: 10px;
-      font-size: 0.825rem;
+      font-size: 0.8rem;
       font-weight: 700;
       color: #334155;
       cursor: pointer;
@@ -241,16 +356,16 @@
 
     .btn-container {
       display: flex;
-      gap: 10px;
-      margin-top: 0.5rem;
+      gap: 8px;
+      margin-top: 0.25rem;
     }
 
     button {
-      padding: 12px 16px;
+      padding: 11px 14px;
       border-radius: 12px;
       border: none;
       font-weight: 700;
-      font-size: 0.925rem;
+      font-size: 0.875rem;
       cursor: pointer;
     }
 
@@ -268,33 +383,14 @@
       border: 1px solid #fecaca;
     }
 
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(16px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .quick-add-group,
-    .btn-container,
-    #saldo-input {
-      animation: fadeUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-    }
-
-    button, .btn-quick {
-      transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.2s ease;
-    }
-
-    button:active, .btn-quick:active {
-      transform: translateY(1px) scale(0.97);
-    }
-
     .history-section {
-      margin-top: 1.75rem;
+      margin-top: 1.25rem;
       border-top: 1px solid #e2e8f0;
-      padding-top: 1.25rem;
+      padding-top: 1rem;
     }
 
     .history-title {
-      font-size: 0.95rem;
+      font-size: 0.875rem;
       font-weight: 700;
       display: flex;
       justify-content: space-between;
@@ -302,22 +398,22 @@
 
     .history-list {
       list-style: none;
-      padding: 0; margin: 0.75rem 0 0 0;
-      max-height: 160px;
+      padding: 0; margin: 0.5rem 0 0 0;
+      max-height: 140px;
       overflow-y: auto;
-      display: flex; flex-direction: column; gap: 8px;
+      display: flex; flex-direction: column; gap: 6px;
     }
 
     .history-item {
       display: flex; justify-content: space-between; align-items: center;
-      padding: 10px 12px; background-color: #f8fafc; border: 1px solid #f1f5f9;
-      border-radius: 10px; font-size: 0.85rem;
+      padding: 8px 10px; background-color: #f8fafc; border: 1px solid #f1f5f9;
+      border-radius: 10px; font-size: 0.8rem;
       animation: fadeUp 0.3s ease forwards;
     }
 
-    .history-date { color: #94a3b8; font-size: 0.75rem; }
+    .history-date { color: #94a3b8; font-size: 0.7rem; }
     .history-amount { font-weight: 700; }
-    .history-diff { font-size: 0.75rem; font-weight: 700; padding: 2px 6px; border-radius: 6px; }
+    .history-diff { font-size: 0.7rem; font-weight: 700; padding: 2px 6px; border-radius: 6px; }
     .diff-plus { background-color: #d1fae5; color: #047857; }
 
     /* Modal Overlay */
@@ -330,13 +426,13 @@
     }
 
     .modal-overlay.active { opacity: 1; pointer-events: auto; }
-    .modal-box { background: #ffffff; padding: 2rem; border-radius: 24px; max-width: 380px; width: 100%; text-align: center; }
+    .modal-box { background: #ffffff; padding: 1.75rem 1.5rem; border-radius: 22px; max-width: 360px; width: 100%; text-align: center; }
     .modal-overlay.active .modal-box { animation: fadeUp 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-    .modal-icon { width: 64px; height: 64px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 2rem; margin: 0 auto 1.25rem auto; }
+    .modal-icon { width: 56px; height: 56px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 1.75rem; margin: 0 auto 1rem auto; }
     .icon-success { background-color: #ecfdf5; color: #10b981; border: 2px solid #a7f3d0; }
     .icon-warning { background-color: #fffbebfb; color: #f59e0b; border: 2px solid #fde68a; }
     .icon-error   { background-color: #fef2f2; color: #dc2626; border: 2px solid #fecaca; }
-    .modal-actions { display: flex; gap: 10px; }
+    .modal-actions { display: flex; gap: 8px; }
     .btn-modal-primary { width: 100%; background-color: #10b981; color: #ffffff; }
     .btn-modal-cancel { flex: 1; background-color: #f1f5f9; color: #475569; }
     .btn-modal-confirm { flex: 1.2; background-color: #dc2626; color: #ffffff; }
@@ -361,13 +457,38 @@
     </div>
 
     <div class="details">
-      <div class="details-row">
-        <div>Saldo Saat Ini:</div>
-        <div><span id="current-text">Rp 0</span></div>
+      <div class="detail-card-item">
+        <div class="detail-card-label">Saldo Saat Ini</div>
+        <div class="detail-card-val"><span id="current-text">Rp 0</span></div>
       </div>
-      <div class="details-row" style="margin-top: 4px;">
-        <div>Sisa Target:</div>
-        <div><span id="remaining-text" style="color: #64748b;">Rp 0</span></div>
+      <div class="detail-card-item">
+        <div class="detail-card-label">Sisa Target</div>
+        <div class="detail-card-val"><span id="remaining-text" style="color: #059669;">Rp 0</span></div>
+      </div>
+    </div>
+
+    <button type="button" class="btn-toggle-est" id="btn-toggle-est" onclick="toggleEstimasi()">
+      <span id="btn-est-icon">⏳</span> <span id="btn-est-text">Lihat Estimasi Sisa Waktu</span>
+    </button>
+
+    <div class="est-box" id="est-box">
+      <div class="est-title">⏱️ Analisis Sisa Waktu Nabung</div>
+      <div class="est-grid">
+        <div class="est-card">
+          <div class="est-num" id="est-days">0</div>
+          <div class="est-label">Hari Lagi</div>
+        </div>
+        <div class="est-card">
+          <div class="est-num" id="est-weeks">0</div>
+          <div class="est-label">Minggu</div>
+        </div>
+        <div class="est-card">
+          <div class="est-num" id="est-months">0</div>
+          <div class="est-label">Bulan</div>
+        </div>
+      </div>
+      <div class="est-quote" id="est-quote">
+        💡 <i>Setiap rupiah mendekatkanmu pada impian!</i>
       </div>
     </div>
 
@@ -408,7 +529,7 @@
         <button type="button" class="btn-quick" onclick="handleQuickAdd(20000)">+ Rp 20.000</button>
       </div>
 
-      <label for="saldo-input" style="margin-top: 4px;">Tambah Nominal Tabungan:</label>
+      <label for="saldo-input" style="margin-top: 2px;">Tambah Nominal Tabungan:</label>
       <input type="text" id="saldo-input" inputmode="numeric" placeholder="Contoh: Rp 187.765">
       
       <div class="btn-container">
@@ -432,7 +553,7 @@
     <div class="modal-box">
       <div class="modal-icon" id="modal-icon">⚠️</div>
       <h3 style="margin:0 0 0.5rem 0;" id="modal-title">Pemberitahuan</h3>
-      <p style="font-size:0.9rem; color:#64748b; margin-bottom:1.5rem;" id="modal-desc"></p>
+      <p style="font-size:0.875rem; color:#64748b; margin-bottom:1.25rem;" id="modal-desc"></p>
       <div class="modal-actions" id="modal-actions"></div>
     </div>
   </div>
@@ -441,8 +562,8 @@
     const modalEl = document.getElementById('app-modal');
     let currentTargetPercentage = 0;
     let isGoalCompletedCelebration = false;
+    let isEstimasiAnimating = false;
 
-    // VALIDASI PENGAMAN BACK BUTTON HP & BFCACHE
     function verifyGoalData() {
       const goalName = localStorage.getItem('rdpu_goal_name');
       if (!goalName) {
@@ -478,6 +599,36 @@
       this.value = rupiah ? 'Rp ' + rupiah : '';
     });
 
+    // LOGIKA ANIMASI DUA ARAH (TOGGLE SHOW / HIDE)
+    function toggleEstimasi() {
+      if (isEstimasiAnimating) return;
+
+      const box = document.getElementById('est-box');
+      const btnText = document.getElementById('btn-est-text');
+      const btnIcon = document.getElementById('btn-est-icon');
+
+      if (box.classList.contains('active')) {
+        isEstimasiAnimating = true;
+        box.classList.remove('active');
+        box.classList.add('hiding');
+
+        btnText.innerText = 'Lihat Estimasi Sisa Waktu';
+        btnIcon.innerText = '⏳';
+
+        setTimeout(() => {
+          box.classList.remove('hiding');
+          isEstimasiAnimating = false;
+        }, 250);
+
+      } else {
+        box.classList.remove('hiding');
+        box.classList.add('active');
+
+        btnText.innerText = 'Sembunyikan Estimasi';
+        btnIcon.innerText = '🙈';
+      }
+    }
+
     function showModal(title, desc, type, isConfirmReset = false, onConfirm = null) {
       const iconEl = document.getElementById('modal-icon');
       document.getElementById('modal-title').innerText = title;
@@ -509,10 +660,12 @@
       }
 
       modalEl.classList.add('active');
+      document.body.classList.add('modal-open');
     }
 
     function closeModal() { 
       modalEl.classList.remove('active'); 
+      document.body.classList.remove('modal-open');
       animateProgressBar();
 
       if (isGoalCompletedCelebration) {
@@ -528,7 +681,6 @@
       }
     }
 
-    // FUNGSI CONFETTI BERUNTUN (~3.5 DETIK)
     function triggerLongCelebration() {
       var duration = 3.5 * 1000;
       var animationEnd = Date.now() + duration;
@@ -536,10 +688,7 @@
 
       var interval = setInterval(function() {
         var timeLeft = animationEnd - Date.now();
-
-        if (timeLeft <= 0) {
-          return clearInterval(interval);
-        }
+        if (timeLeft <= 0) return clearInterval(interval);
 
         var particleCount = 50 * (timeLeft / duration);
         confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } }));
@@ -608,6 +757,28 @@
 
       let remaining = targetAmount - currentAmount;
       if (remaining < 0) remaining = 0;
+
+      const avgDailyRate = 20000;
+      let daysLeft = Math.ceil(remaining / avgDailyRate);
+      if (remaining === 0) daysLeft = 0;
+
+      let weeksLeft = (daysLeft / 7).toFixed(1);
+      let monthsLeft = (daysLeft / 30).toFixed(1);
+
+      document.getElementById('est-days').innerText = daysLeft.toLocaleString('id-ID');
+      document.getElementById('est-weeks').innerText = weeksLeft;
+      document.getElementById('est-months').innerText = monthsLeft;
+
+      const quoteEl = document.getElementById('est-quote');
+      if (remaining === 0) {
+        quoteEl.innerHTML = '🏆 <b>Target Lunas!</b> Kamu berhasil mencapai target 100%.';
+      } else if (daysLeft <= 14) {
+        quoteEl.innerHTML = '🔥 <b>Sudah Dekat Sekali!</b> Sedikit lagi target utama kamu selesai!';
+      } else if (daysLeft <= 60) {
+        quoteEl.innerHTML = '💪 <b>Progres Bagus!</b> Tetap konsisten nabung tiap hari ya.';
+      } else {
+        quoteEl.innerHTML = '💡 <i>"Setiap langkah kecil membawamu makin dekat ke tujuan."</i>';
+      }
 
       const levels = [
         { id: 0, val: 0, defaultText: '1' },

@@ -5,301 +5,93 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Setup Target Nabung</title>
   <style>
-    * {
-      box-sizing: border-box;
-      font-family: 'Plus Jakarta Sans', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
+    * { box-sizing: border-box; font-family: 'Plus Jakarta Sans', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    body { background: linear-gradient(135deg, #eef2f6 0%, #e2e8f0 100%); color: #0f172a; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 1.5rem 1rem; }
+    .card { background-color: #ffffff; padding: 2.25rem 2rem; border-radius: 24px; box-shadow: 0 20px 40px -15px rgba(15, 23, 42, 0.07); border: 1px solid #e2e8f0; width: 100%; max-width: 440px; }
+    .card-header { text-align: center; margin-bottom: 1.25rem; }
+    .level-tag { display: inline-block; background-color: #e0e7ff; color: #3730a3; font-size: 0.75rem; font-weight: 800; padding: 4px 12px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 6px; }
+    .card-header h2 { margin: 0; color: #0f172a; font-size: 1.5rem; font-weight: 800; }
+    .card-header p { margin: 6px 0 0 0; color: #64748b; font-size: 0.875rem; }
+    .input-group { display: flex; flex-direction: column; gap: 0.8rem; }
+    label { font-weight: 600; font-size: 0.875rem; color: #334155; }
+    input { padding: 12px 16px; border-radius: 12px; border: 1.5px solid #cbd5e1; background-color: #ffffff; color: #0f172a; font-size: 0.95rem; font-weight: 600; outline: none; width: 100%; margin-top: 4px; transition: border-color 0.2s, box-shadow 0.2s; }
+    input:focus { border-color: #10b981; box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.15); }
 
-    body {
-      background: linear-gradient(135deg, #eef2f6 0%, #e2e8f0 100%);
-      color: #0f172a;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      margin: 0;
-      padding: 1.5rem 1rem;
-    }
+    .freq-toggle-container { display: flex; background-color: #f1f5f9; border: 1px solid #e2e8f0; border-radius: 12px; padding: 4px; gap: 4px; margin-top: 4px; }
+    .freq-btn { flex: 1; padding: 8px 4px; border: none; background: transparent; color: #64748b; font-size: 0.8rem; font-weight: 700; border-radius: 8px; cursor: pointer; transition: all 0.2s ease; }
+    .freq-btn.active { background-color: #ffffff; color: #0f172a; box-shadow: 0 2px 6px rgba(15, 23, 42, 0.08); }
 
-    .card {
-      background-color: #ffffff;
-      padding: 2.25rem 2rem;
-      border-radius: 24px;
-      box-shadow: 0 20px 40px -15px rgba(15, 23, 42, 0.07);
-      border: 1px solid #e2e8f0;
-      width: 100%;
-      max-width: 440px;
-    }
+    .calc-box { background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 18px; padding: 16px; margin-top: 0.4rem; }
+    .calc-header-title { font-size: 0.75rem; font-weight: 800; color: #475569; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px; }
+    .calc-empty-text { font-size: 0.85rem; color: #94a3b8; line-height: 1.4; }
+    .time-highlight { background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%); border: 1px solid #a7f3d0; border-radius: 14px; padding: 12px; text-align: center; margin-bottom: 10px; }
+    .time-num { font-size: 2rem; font-weight: 800; color: #047857; line-height: 1; }
+    .time-unit { font-size: 1.1rem; font-weight: 800; color: #065f46; margin-left: 2px; }
+    .time-desc { font-size: 0.75rem; color: #047857; font-weight: 600; margin-top: 4px; }
+    .calc-stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px; }
+    .stat-card { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px; }
+    .stat-label { font-size: 0.675rem; font-weight: 700; color: #64748b; margin-bottom: 2px; }
+    .stat-val { font-size: 0.875rem; font-weight: 800; color: #0f172a; }
+    .calc-badge-quote { font-size: 0.775rem; color: #334155; background-color: #f1f5f9; padding: 8px 12px; border-radius: 10px; line-height: 1.3; }
 
-    .card-header {
-      text-align: center;
-      margin-bottom: 1.25rem;
-    }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+    button.btn-submit-main { padding: 14px 16px; border-radius: 12px; border: none; font-weight: 700; font-size: 0.95rem; cursor: pointer; background-color: #10b981; color: #ffffff; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25); margin-top: 10px; width: 100%; transition: transform 0.2s; }
+    button.btn-submit-main:active { transform: translateY(1px) scale(0.97); }
 
-    .level-tag {
-      display: inline-block;
-      background-color: #e0e7ff;
-      color: #3730a3;
-      font-size: 0.75rem;
-      font-weight: 800;
-      padding: 4px 12px;
-      border-radius: 20px;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      margin-bottom: 6px;
-    }
-
-    .card-header h2 {
-      margin: 0;
-      color: #0f172a;
-      font-size: 1.5rem;
-      font-weight: 800;
-    }
-
-    .card-header p {
-      margin: 6px 0 0 0;
-      color: #64748b;
-      font-size: 0.875rem;
-    }
-
-    .input-group {
-      display: flex;
-      flex-direction: column;
-      gap: 0.8rem;
-    }
-
-    .grid-2 {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-    }
-
-    label {
-      font-weight: 600;
-      font-size: 0.875rem;
-      color: #334155;
-    }
-
-    input, select {
-      padding: 12px 16px;
-      border-radius: 12px;
-      border: 1.5px solid #cbd5e1;
-      background-color: #ffffff;
-      color: #0f172a;
-      font-size: 0.95rem;
-      font-weight: 600;
-      outline: none;
-      width: 100%;
-      margin-top: 4px;
-      transition: border-color 0.2s, box-shadow 0.2s;
-    }
-
-    input:focus, select:focus {
-      border-color: #10b981;
-      box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.15);
-    }
-
-    /* DESAIN KOTAK KALKULATOR BARU */
-    .calc-box {
-      background: #f8fafc;
-      border: 1.5px solid #e2e8f0;
-      border-radius: 18px;
-      padding: 16px;
-      margin-top: 0.4rem;
-    }
-
-    .calc-header-title {
-      font-size: 0.75rem;
-      font-weight: 800;
-      color: #475569;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      margin-bottom: 8px;
-    }
-
-    .calc-empty-text {
-      font-size: 0.85rem;
-      color: #94a3b8;
-      line-height: 1.4;
-    }
-
-    .time-highlight {
-      background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
-      border: 1px solid #a7f3d0;
-      border-radius: 14px;
-      padding: 12px;
-      text-align: center;
-      margin-bottom: 10px;
-    }
-
-    .time-num {
-      font-size: 2rem;
-      font-weight: 800;
-      color: #047857;
-      line-height: 1;
-    }
-
-    .time-unit {
-      font-size: 1.1rem;
-      font-weight: 800;
-      color: #065f46;
-      margin-left: 2px;
-    }
-
-    .time-desc {
-      font-size: 0.75rem;
-      color: #047857;
-      font-weight: 600;
-      margin-top: 4px;
-    }
-
-    .calc-stats-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px;
-      margin-bottom: 10px;
-    }
-
-    .stat-card {
-      background: #ffffff;
-      border: 1px solid #e2e8f0;
-      border-radius: 12px;
-      padding: 10px;
-    }
-
-    .stat-label {
-      font-size: 0.675rem;
-      font-weight: 700;
-      color: #64748b;
-      margin-bottom: 2px;
-    }
-
-    .stat-val {
-      font-size: 0.875rem;
-      font-weight: 800;
-      color: #0f172a;
-    }
-
-    .calc-badge-quote {
-      font-size: 0.775rem;
-      color: #334155;
-      background-color: #f1f5f9;
-      padding: 8px 12px;
-      border-radius: 10px;
-      line-height: 1.3;
-    }
-
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(16px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    button {
-      padding: 14px 16px;
-      border-radius: 12px;
-      border: none;
-      font-weight: 700;
-      font-size: 0.95rem;
-      cursor: pointer;
-      background-color: #10b981;
-      color: #ffffff;
-      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25);
-      margin-top: 10px;
-      width: 100%;
-      animation: fadeUp 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-      transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.2s ease;
-    }
-
-    button:hover { background-color: #059669; }
-    button:active { transform: translateY(1px) scale(0.97); }
-
-    .modal-overlay {
-      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-      background-color: rgba(15, 23, 42, 0.6); backdrop-filter: blur(6px);
-      display: flex; justify-content: center; align-items: center;
-      opacity: 0; pointer-events: none; transition: opacity 0.3s ease;
-      z-index: 999; padding: 1rem;
-    }
-
+    .modal-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: rgba(15, 23, 42, 0.6); backdrop-filter: blur(6px); display: flex; justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; z-index: 999; padding: 1rem; }
     .modal-overlay.active { opacity: 1; pointer-events: auto; }
     .modal-box { background: #ffffff; padding: 2rem; border-radius: 24px; max-width: 400px; width: 100%; text-align: center; }
-    .modal-overlay.active .modal-box { animation: fadeUp 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
     .modal-icon { font-size: 2.5rem; margin-bottom: 0.5rem; }
     .modal-title { font-size: 1.25rem; font-weight: 800; margin-bottom: 0.5rem; }
-
-    .saving-summary-box {
-      background-color: #f8fafc;
-      border: 1px solid #e2e8f0;
-      border-radius: 14px;
-      padding: 12px 16px;
-      margin-bottom: 1.25rem;
-      text-align: left;
-      font-size: 0.85rem;
-      line-height: 1.7;
-    }
-
+    .saving-summary-box { background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 14px; padding: 12px 16px; margin-bottom: 1.25rem; text-align: left; font-size: 0.85rem; line-height: 1.7; }
     .saving-summary-box div span { font-weight: 700; color: #0f172a; }
-
     .modal-actions { display: flex; flex-direction: column; gap: 8px; }
-    .btn-modal-continue { background-color: #10b981; color: #ffffff; margin-top: 0; }
-    .btn-modal-reset { background-color: #f1f5f9; color: #64748b; box-shadow: none; margin-top: 0; }
-    .btn-modal-reset:hover { background-color: #e2e8f0; color: #0f172a; }
+    .btn-modal-continue { background-color: #10b981; color: #ffffff; border: none; padding: 12px; border-radius: 12px; font-weight: 700; cursor: pointer; }
+    .btn-modal-reset { background-color: #f1f5f9; color: #64748b; border: none; padding: 12px; border-radius: 12px; font-weight: 700; cursor: pointer; }
   </style>
 </head>
 <body>
-
   <div class="card">
     <div class="card-header">
       <span class="level-tag">PEMBUATAN TARGET</span>
       <h2>🎯 Target Nabung</h2>
       <p>Atur target dan estimasi tabunganmu</p>
     </div>
-
-    <form id="setupForm" onsubmit="handleSetupSubmit(event)">
+    <form id="setupForm" onsubmit="handleSetupSubmit(event)" novalidate>
       <div class="input-group">
         <div>
           <label for="goal-name">Nama Tabungan</label>
-          <input type="text" id="goal-name" required placeholder="Contoh: Beli Laptop Asus ROG">
+          <input type="text" id="goal-name" placeholder="Contoh: Beli Laptop Asus ROG">
         </div>
-
         <div>
           <label for="target-amount">Target Utama Tabungan</label>
-          <input type="text" id="target-amount" required placeholder="Rp 500.000">
+          <input type="text" id="target-amount" inputmode="numeric" placeholder="Rp 500.000">
         </div>
-
-        <div class="grid-2">
-          <div>
-            <label for="period-amount">Nominal Nabung</label>
-            <input type="text" id="period-amount" placeholder="Rp 20.000">
-          </div>
-          <div>
-            <label for="frequency">Frekuensi</label>
-            <select id="frequency">
-              <option value="hari">Per Hari</option>
-              <option value="minggu">Per Minggu</option>
-              <option value="bulan">Per Bulan</option>
-            </select>
-          </div>
+        <div>
+          <label for="period-amount">Nominal Nabung</label>
+          <input type="text" id="period-amount" inputmode="numeric" placeholder="Rp 20.000">
         </div>
-
-        <!-- KALKULATOR ESTIMASI INTERAKTIF -->
+        <div>
+          <label>Frekuensi Nabung</label>
+          <div class="freq-toggle-container">
+            <button type="button" class="freq-btn active" onclick="setFrequency('hari')">Per Hari</button>
+            <button type="button" class="freq-btn" onclick="setFrequency('minggu')">Per Minggu</button>
+            <button type="button" class="freq-btn" onclick="setFrequency('bulan')">Per Bulan</button>
+          </div>
+          <input type="hidden" id="frequency" value="hari">
+        </div>
         <div class="calc-box">
           <div class="calc-header-title">⚡ Estimasi & Breakdown Progres</div>
-          
-          <div id="calc-content-empty" class="calc-empty-text">
-            Masukkan target & nominal nabung untuk melihat analisis estimasi waktu.
-          </div>
-
+          <div id="calc-content-empty" class="calc-empty-text">Masukkan target & nominal nabung untuk melihat analisis estimasi waktu.</div>
           <div id="calc-content-active" style="display: none;">
             <div class="time-highlight">
               <span class="time-num" id="calc-time-num">0</span>
-              <span class="time-unit" id="calc-time-unit">Hari</span>
-              <div class="time-desc">Estimasi waktu hingga Target Utama tercapai</div>
+              <span class="time-unit" id="calc-time-unit">HARI</span>
+              <div class="time-desc" id="calc-time-desc">Estimasi total waktu</div>
             </div>
-
             <div class="calc-stats-grid">
               <div class="stat-card">
-                <div class="stat-label">🎯 Milestone Level 2 (20%)</div>
+                <div class="stat-label">🎯 Milestone 20%</div>
                 <div class="stat-val" id="calc-l2-time">0 Hari</div>
               </div>
               <div class="stat-card">
@@ -307,31 +99,20 @@
                 <div class="stat-val" id="calc-monthly-rate">Rp 0</div>
               </div>
             </div>
-
-            <div class="calc-badge-quote" id="calc-quote">
-              💡 <i>"Konsistensi kecil setiap hari membawa dampak besar!"</i>
-            </div>
+            <div class="calc-badge-quote" id="calc-quote">💡 <i>"Konsistensi kecil setiap hari membawa dampak besar!"</i></div>
           </div>
         </div>
-
-        <button type="submit">Mulai Menabung</button>
+        <button type="submit" class="btn-submit-main">Mulai Menabung</button>
       </div>
     </form>
   </div>
-
-  <!-- POPUP MELANJUTKAN TABUNGAN -->
   <div class="modal-overlay" id="app-modal">
     <div class="modal-box">
       <div class="modal-icon" id="modal-icon">🏦</div>
       <h3 class="modal-title" id="modal-title">Lanjutkan Tabungan?</h3>
-      <p style="text-align: center; color: #64748b; font-size: 0.85rem; margin-bottom: 12px;">Kamu masih memiliki tabungan aktif yang tersimpan:</p>
-
+      <p style="text-align: center; color: #64748b; font-size: 0.85rem; margin-bottom: 12px;" id="modal-sub-desc">Kamu masih memiliki tabungan aktif yang tersimpan:</p>
       <div class="saving-summary-box" id="saving-summary"></div>
-
-      <div class="modal-actions">
-        <button type="button" class="btn-modal-continue" onclick="goToDashboard()">LANJUTKAN TABUNGAN</button>
-        <button type="button" class="btn-modal-reset" onclick="startNewGoal()">Buat Target Baru</button>
-      </div>
+      <div class="modal-actions" id="modal-actions-wrap"></div>
     </div>
   </div>
   <script>
@@ -340,78 +121,70 @@
     const freqInput = document.getElementById('frequency');
     const modalEl = document.getElementById('app-modal');
 
-    function formatRupiah(angka) {
-      return 'Rp ' + Number(angka).toLocaleString('id-ID');
-    }
-
+    function formatRupiah(angka) { return 'Rp ' + Number(angka).toLocaleString('id-ID'); }
     function formatInputRupiah(angka) {
       let number_string = angka.replace(/[^,\d]/g, '').toString();
-      let split   = number_string.split(',');
-      let sisa    = split[0].length % 3;
-      let rupiah  = split[0].substr(0, sisa);
-      let ribuan  = split[0].substr(sisa).match(/\d{3}/gi);
-
-      if (ribuan) {
-        let separator = sisa ? '.' : '';
-        rupiah += separator + ribuan.join('.');
-      }
-
+      let split = number_string.split(',');
+      let sisa = split[0].length % 3;
+      let rupiah = split[0].substr(0, sisa);
+      let ribuan = split[0].substr(sisa).match(/\d{3}/gi);
+      if (ribuan) { let separator = sisa ? '.' : ''; rupiah += separator + ribuan.join('.'); }
       rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
       return rupiah ? 'Rp ' + rupiah : '';
     }
-
-    function parseRawNumber(str) {
-      if (!str) return 0;
-      return parseFloat(str.replace(/[^0-9]/g, '')) || 0;
-    }
+    function parseRawNumber(str) { if (!str) return 0; return parseFloat(str.replace(/[^0-9]/g, '')) || 0; }
 
     [targetInput, periodInput].forEach(el => {
-      el.addEventListener('keyup', function() {
-        this.value = formatInputRupiah(this.value);
-        updateCalculator();
-      });
+      el.addEventListener('keyup', function() { this.value = formatInputRupiah(this.value); updateCalculator(); });
     });
 
-    freqInput.addEventListener('change', updateCalculator);
+    function setFrequency(val) {
+      freqInput.value = val;
+      const btns = document.querySelectorAll('.freq-btn');
+      btns.forEach(btn => btn.classList.remove('active'));
+      if (val === 'hari') btns[0].classList.add('active');
+      else if (val === 'minggu') btns[1].classList.add('active');
+      else if (val === 'bulan') btns[2].classList.add('active');
+      updateCalculator();
+    }
 
     function updateCalculator() {
       const target = parseRawNumber(targetInput.value);
       const period = parseRawNumber(periodInput.value);
       const freq = freqInput.value;
-
       const emptyWrap = document.getElementById('calc-content-empty');
       const activeWrap = document.getElementById('calc-content-active');
 
       if (target > 0 && period > 0) {
-        emptyWrap.style.display = 'none';
-        activeWrap.style.display = 'block';
+        emptyWrap.style.display = 'none'; activeWrap.style.display = 'block';
+        
+        // Logika Baru: Konversi ke Hari untuk akurasi
+        const totalPeriods = Math.ceil(target / period);
+        let totalDays = totalPeriods;
+        if (freq === 'minggu') totalDays = totalPeriods * 7;
+        if (freq === 'bulan') totalDays = totalPeriods * 30;
 
-        const totalTime = Math.ceil(target / period);
-        const l2Target = target * 0.2;
-        const l2Time = Math.ceil(l2Target / period);
-
+        document.getElementById('calc-time-num').innerText = totalPeriods.toLocaleString('id-ID');
+        document.getElementById('calc-time-unit').innerText = freq.toUpperCase();
+        document.getElementById('calc-time-desc').innerText = `Estimasi: ~${totalDays} hari total`;
+        
+        // Milestones
+        const l2Periods = Math.ceil((target * 0.2) / period);
+        document.getElementById('calc-l2-time').innerText = `${l2Periods} ${freq}`;
+        
+        // Rate per bulan
         let monthlyRate = 0;
         if (freq === 'hari') monthlyRate = period * 30;
         else if (freq === 'minggu') monthlyRate = period * 4;
         else monthlyRate = period;
-
-        document.getElementById('calc-time-num').innerText = totalTime.toLocaleString('id-ID');
-        document.getElementById('calc-time-unit').innerText = freq.toUpperCase();
-        document.getElementById('calc-l2-time').innerText = `${l2Time} ${freq}`;
         document.getElementById('calc-monthly-rate').innerText = formatRupiah(monthlyRate);
 
         const quoteEl = document.getElementById('calc-quote');
-        if (totalTime <= 30 && freq === 'hari') {
-          quoteEl.innerHTML = '🔥 <b>Target Cepat!</b> Sangat realistis untuk dicapai dalam sebulan!';
-        } else if (totalTime <= 12 && freq === 'bulan') {
-          quoteEl.innerHTML = '🚀 <b>Rencana Bagus!</b> Dalam 1 tahun target utama kamu bakal kelar.';
-        } else {
-          quoteEl.innerHTML = '💡 <i>"Langkah kecil konsisten jauh lebih baik daripada nominal besar tapi terhenti."</i>';
-        }
-
+        if (totalDays <= 30) quoteEl.innerHTML = '🔥 <b>Target Cepat!</b> Sangat realistis untuk dicapai dalam sebulan!';
+        else if (totalDays <= 365) quoteEl.innerHTML = '🚀 <b>Rencana Bagus!</b> Dalam setahun target kamu bakal kelar.';
+        else quoteEl.innerHTML = '💡 <i>"Langkah kecil konsisten jauh lebih baik daripada nominal besar tapi terhenti."</i>';
       } else {
-        emptyWrap.style.display = 'block';
-        activeWrap.style.display = 'none';
+        emptyWrap.style.display = 'block'; activeWrap.style.display = 'none';
       }
     }
 
@@ -434,41 +207,51 @@
         if (percent > 100) percent = 100;
         const levelStr = getLevelText(percent);
 
+        document.getElementById('modal-icon').innerText = '🏦';
+        document.getElementById('modal-title').innerText = 'Lanjutkan Tabungan?';
+        document.getElementById('modal-sub-desc').style.display = 'block';
         document.getElementById('saving-summary').innerHTML = `
           <div>Nama Tabungan: <span>${savedGoalName}</span></div>
           <div>Level Pencapaian: <span style="color:#3730a3;">${levelStr}</span></div>
           <div>Saldo Terkumpul: <span style="color:#10b981;">${formatRupiah(savedSaldo)}</span></div>
           <div>Target Utama: <span>${formatRupiah(savedTarget)}</span> (${percent}%)</div>
         `;
-
+        document.getElementById('modal-actions-wrap').innerHTML = `
+          <button type="button" class="btn-modal-continue" onclick="goToDashboard()">LANJUTKAN TABUNGAN</button>
+          <button type="button" class="btn-modal-reset" onclick="startNewGoal()">Buat Target Baru</button>
+        `;
         modalEl.classList.add('active');
       }
     };
 
-    function goToDashboard() {
-      window.location.replace('/dashboard');
+    function goToDashboard() { window.location.replace('/dashboard'); }
+    function startNewGoal() { localStorage.clear(); modalEl.classList.remove('active'); }
+    function showErrorModal(title, desc) {
+      document.getElementById('modal-icon').innerText = '⚠️';
+      document.getElementById('modal-title').innerText = title;
+      document.getElementById('modal-sub-desc').style.display = 'none';
+      document.getElementById('saving-summary').innerHTML = `<div style="text-align:center; color:#dc2626; font-size:0.9rem;">${desc}</div>`;
+      document.getElementById('modal-actions-wrap').innerHTML = `<button type="button" class="btn-modal-continue" onclick="closeErrorModal()">OK, Saya Isi!</button>`;
+      modalEl.classList.add('active');
     }
-
-    function startNewGoal() {
-      localStorage.clear();
-      modalEl.classList.remove('active');
-    }
+    function closeErrorModal() { modalEl.classList.remove('active'); }
 
     function handleSetupSubmit(e) {
       e.preventDefault();
-      const goalName = document.getElementById('goal-name').value;
+      if (document.activeElement) document.activeElement.blur();
+      
+      const goalName = document.getElementById('goal-name').value.trim();
       const targetVal = parseRawNumber(targetInput.value);
+      const periodVal = parseRawNumber(periodInput.value);
 
-      if (targetVal <= 0) {
-        alert('Harap masukkan nominal target yang lebih besar dari Rp 0.');
-        return;
-      }
+      if (!goalName) { showErrorModal('Input Belum Lengkap!', 'Harap isi <b>Nama Tabungan</b> kamu terlebih dahulu.'); return; }
+      if (targetVal <= 0) { showErrorModal('Target Tidak Valid!', 'Harap masukkan nominal <b>Target Utama Tabungan</b> > Rp 0.'); return; }
+      if (periodVal <= 0) { showErrorModal('Nominal Nabung Kosong!', 'Harap masukkan nominal <b>Rencana Nabung</b> > Rp 0.'); return; }
 
       localStorage.setItem('rdpu_goal_name', goalName);
       localStorage.setItem('rdpu_target_custom', targetVal);
       localStorage.setItem('rdpu_saldo', 0);
       localStorage.setItem('rdpu_history', JSON.stringify([]));
-
       window.location.replace('/dashboard');
     }
   </script>

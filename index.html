@@ -14,12 +14,49 @@
     .card-header p { margin: 6px 0 0 0; color: #64748b; font-size: 0.875rem; }
     .input-group { display: flex; flex-direction: column; gap: 0.8rem; }
     label { font-weight: 600; font-size: 0.875rem; color: #334155; }
-    input { padding: 12px 16px; border-radius: 12px; border: 1.5px solid #cbd5e1; background-color: #ffffff; color: #0f172a; font-size: 0.95rem; font-weight: 600; outline: none; width: 100%; margin-top: 4px; transition: border-color 0.2s, box-shadow 0.2s; }
-    input:focus { border-color: #10b981; box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.15); }
+    input[type="text"] { padding: 12px 16px; border-radius: 12px; border: 1.5px solid #cbd5e1; background-color: #ffffff; color: #0f172a; font-size: 0.95rem; font-weight: 600; outline: none; width: 100%; margin-top: 4px; transition: border-color 0.2s, box-shadow 0.2s; }
+    input[type="text"]:focus { border-color: #10b981; box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.15); }
 
+    /* TOGGLE MAIN FREKUENSI */
     .freq-toggle-container { display: flex; background-color: #f1f5f9; border: 1px solid #e2e8f0; border-radius: 12px; padding: 4px; gap: 4px; margin-top: 4px; }
     .freq-btn { flex: 1; padding: 8px 4px; border: none; background: transparent; color: #64748b; font-size: 0.8rem; font-weight: 700; border-radius: 8px; cursor: pointer; transition: all 0.2s ease; }
     .freq-btn.active { background-color: #ffffff; color: #0f172a; box-shadow: 0 2px 6px rgba(15, 23, 42, 0.08); }
+
+    /* SUB MODE UNTUK PER HARI */
+    .sub-day-mode { display: none; margin-top: 8px; gap: 6px; }
+    .sub-day-mode.active { display: flex; }
+    .sub-btn { flex: 1; padding: 6px; border: 1px solid #cbd5e1; background: #ffffff; color: #64748b; font-size: 0.75rem; font-weight: 700; border-radius: 8px; cursor: pointer; transition: all 0.2s; }
+    .sub-btn.active { background: #e0e7ff; color: #3730a3; border-color: #c7d2fe; }
+
+    /* SELEKSI HARI PILLS AESTHETIC */
+    .day-picker-box { display: none; margin-top: 8px; animation: fadeUp 0.25s ease forwards; }
+    .day-picker-box.active { display: block; }
+    .day-pills-wrap { display: flex; justify-content: space-between; gap: 4px; margin-top: 6px; }
+    
+    .pill-item { position: relative; flex: 1; }
+    .pill-item input { position: absolute; opacity: 0; cursor: pointer; height: 0; width: 0; }
+    .pill-label {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 36px;
+      border-radius: 10px;
+      background: #f8fafc;
+      border: 1.5px solid #e2e8f0;
+      font-size: 0.725rem;
+      font-weight: 800;
+      color: #64748b;
+      cursor: pointer;
+      user-select: none;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .pill-item input:checked + .pill-label {
+      background: #10b981;
+      color: #ffffff;
+      border-color: #10b981;
+      box-shadow: 0 3px 8px rgba(16, 185, 129, 0.25);
+      transform: translateY(-1px);
+    }
 
     .calc-box { background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 18px; padding: 16px; margin-top: 0.4rem; }
     .calc-header-title { font-size: 0.75rem; font-weight: 800; color: #475569; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px; }
@@ -34,7 +71,7 @@
     .stat-val { font-size: 0.875rem; font-weight: 800; color: #0f172a; }
     .calc-badge-quote { font-size: 0.775rem; color: #334155; background-color: #f1f5f9; padding: 8px 12px; border-radius: 10px; line-height: 1.3; }
 
-    @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
     button.btn-submit-main { padding: 14px 16px; border-radius: 12px; border: none; font-weight: 700; font-size: 0.95rem; cursor: pointer; background-color: #10b981; color: #ffffff; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25); margin-top: 10px; width: 100%; transition: transform 0.2s; }
     button.btn-submit-main:active { transform: translateY(1px) scale(0.97); }
 
@@ -51,44 +88,70 @@
   </style>
 </head>
 <body>
+
   <div class="card">
     <div class="card-header">
       <span class="level-tag">PEMBUATAN TARGET</span>
       <h2>🎯 Target Nabung</h2>
       <p>Atur target dan estimasi tabunganmu</p>
     </div>
+
     <form id="setupForm" onsubmit="handleSetupSubmit(event)" novalidate>
       <div class="input-group">
         <div>
           <label for="goal-name">Nama Tabungan</label>
           <input type="text" id="goal-name" placeholder="Contoh: Beli Laptop Asus ROG">
         </div>
+
         <div>
           <label for="target-amount">Target Utama Tabungan</label>
           <input type="text" id="target-amount" inputmode="numeric" placeholder="Rp 500.000">
         </div>
+
         <div>
           <label for="period-amount">Nominal Nabung</label>
           <input type="text" id="period-amount" inputmode="numeric" placeholder="Rp 20.000">
         </div>
+
         <div>
           <label>Frekuensi Nabung</label>
           <div class="freq-toggle-container">
-            <button type="button" class="freq-btn active" onclick="setFrequency('hari')">Per Hari</button>
-            <button type="button" class="freq-btn" onclick="setFrequency('minggu')">Per Minggu</button>
-            <button type="button" class="freq-btn" onclick="setFrequency('bulan')">Per Bulan</button>
+            <button type="button" class="freq-btn active" onclick="setMainFreq('hari')">Per Hari</button>
+            <button type="button" class="freq-btn" onclick="setMainFreq('minggu')">Per Minggu</button>
+            <button type="button" class="freq-btn" onclick="setMainFreq('bulan')">Per Bulan</button>
           </div>
-          <input type="hidden" id="frequency" value="hari">
+
+          <!-- OPSI SUB UNTUK "PER HARI" -->
+          <div class="sub-day-mode active" id="sub-day-wrapper">
+            <button type="button" class="sub-btn active" onclick="setDaySubMode('everyday')">Setiap Hari</button>
+            <button type="button" class="sub-btn" onclick="setDaySubMode('custom')">Pilih Hari Khusus</button>
+          </div>
+          
+          <!-- SELEKSI HARI PILLS AESTHETIC -->
+          <div class="day-picker-box" id="day-picker-box">
+            <div class="day-pills-wrap">
+              <label class="pill-item"><input type="checkbox" value="Sen" checked onchange="updateCalculator()"><span class="pill-label">Sen</span></label>
+              <label class="pill-item"><input type="checkbox" value="Sel" checked onchange="updateCalculator()"><span class="pill-label">Sel</span></label>
+              <label class="pill-item"><input type="checkbox" value="Rab" checked onchange="updateCalculator()"><span class="pill-label">Rab</span></label>
+              <label class="pill-item"><input type="checkbox" value="Kam" checked onchange="updateCalculator()"><span class="pill-label">Kam</span></label>
+              <label class="pill-item"><input type="checkbox" value="Jum" checked onchange="updateCalculator()"><span class="pill-label">Jum</span></label>
+              <label class="pill-item"><input type="checkbox" value="Sab" onchange="updateCalculator()"><span class="pill-label">Sab</span></label>
+              <label class="pill-item"><input type="checkbox" value="Min" onchange="updateCalculator()"><span class="pill-label">Min</span></label>
+            </div>
+          </div>
         </div>
+
         <div class="calc-box">
           <div class="calc-header-title">⚡ Estimasi & Breakdown Progres</div>
           <div id="calc-content-empty" class="calc-empty-text">Masukkan target & nominal nabung untuk melihat analisis estimasi waktu.</div>
+          
           <div id="calc-content-active" style="display: none;">
             <div class="time-highlight">
               <span class="time-num" id="calc-time-num">0</span>
               <span class="time-unit" id="calc-time-unit">HARI</span>
-              <div class="time-desc" id="calc-time-desc">Estimasi total waktu</div>
+              <div class="time-desc" id="calc-time-desc">Estimasi total durasi waktu</div>
             </div>
+
             <div class="calc-stats-grid">
               <div class="stat-card">
                 <div class="stat-label">🎯 Milestone 20%</div>
@@ -99,13 +162,16 @@
                 <div class="stat-val" id="calc-monthly-rate">Rp 0</div>
               </div>
             </div>
-            <div class="calc-badge-quote" id="calc-quote">💡 <i>"Konsistensi kecil setiap hari membawa dampak besar!"</i></div>
+
+            <div class="calc-badge-quote" id="calc-quote">💡 <i>"Konsistensi kecil membawa dampak besar!"</i></div>
           </div>
         </div>
+
         <button type="submit" class="btn-submit-main">Mulai Menabung</button>
       </div>
     </form>
   </div>
+
   <div class="modal-overlay" id="app-modal">
     <div class="modal-box">
       <div class="modal-icon" id="modal-icon">🏦</div>
@@ -118,8 +184,10 @@
   <script>
     const targetInput = document.getElementById('target-amount');
     const periodInput = document.getElementById('period-amount');
-    const freqInput = document.getElementById('frequency');
     const modalEl = document.getElementById('app-modal');
+    
+    let mainFreq = 'hari'; // 'hari', 'minggu', 'bulan'
+    let daySubMode = 'everyday'; // 'everyday', 'custom'
 
     function formatRupiah(angka) { return 'Rp ' + Number(angka).toLocaleString('id-ID'); }
     function formatInputRupiah(angka) {
@@ -138,53 +206,94 @@
       el.addEventListener('keyup', function() { this.value = formatInputRupiah(this.value); updateCalculator(); });
     });
 
-    function setFrequency(val) {
-      freqInput.value = val;
+    function setMainFreq(freq) {
+      mainFreq = freq;
       const btns = document.querySelectorAll('.freq-btn');
-      btns.forEach(btn => btn.classList.remove('active'));
-      if (val === 'hari') btns[0].classList.add('active');
-      else if (val === 'minggu') btns[1].classList.add('active');
-      else if (val === 'bulan') btns[2].classList.add('active');
+      const subWrapper = document.getElementById('sub-day-wrapper');
+      const dayPickerBox = document.getElementById('day-picker-box');
+
+      btns.forEach(b => b.classList.remove('active'));
+      if (freq === 'hari') {
+        btns[0].classList.add('active');
+        subWrapper.classList.add('active');
+        if (daySubMode === 'custom') dayPickerBox.classList.add('active');
+      } else {
+        if (freq === 'minggu') btns[1].classList.add('active');
+        if (freq === 'bulan') btns[2].classList.add('active');
+        subWrapper.classList.remove('active');
+        dayPickerBox.classList.remove('active');
+      }
+      updateCalculator();
+    }
+
+    function setDaySubMode(mode) {
+      daySubMode = mode;
+      const subBtns = document.querySelectorAll('.sub-btn');
+      const dayPickerBox = document.getElementById('day-picker-box');
+
+      subBtns.forEach(b => b.classList.remove('active'));
+      if (mode === 'everyday') {
+        subBtns[0].classList.add('active');
+        dayPickerBox.classList.remove('active');
+      } else {
+        subBtns[1].classList.add('active');
+        dayPickerBox.classList.add('active');
+      }
       updateCalculator();
     }
 
     function updateCalculator() {
       const target = parseRawNumber(targetInput.value);
       const period = parseRawNumber(periodInput.value);
-      const freq = freqInput.value;
       const emptyWrap = document.getElementById('calc-content-empty');
       const activeWrap = document.getElementById('calc-content-active');
 
       if (target > 0 && period > 0) {
-        emptyWrap.style.display = 'none'; activeWrap.style.display = 'block';
-        
-        // Logika Baru: Konversi ke Hari untuk akurasi
-        const totalPeriods = Math.ceil(target / period);
-        let totalDays = totalPeriods;
-        if (freq === 'minggu') totalDays = totalPeriods * 7;
-        if (freq === 'bulan') totalDays = totalPeriods * 30;
+        emptyWrap.style.display = 'none'; 
+        activeWrap.style.display = 'block';
 
-        document.getElementById('calc-time-num').innerText = totalPeriods.toLocaleString('id-ID');
-        document.getElementById('calc-time-unit').innerText = freq.toUpperCase();
-        document.getElementById('calc-time-desc').innerText = `Estimasi: ~${totalDays} hari total`;
-        
-        // Milestones
-        const l2Periods = Math.ceil((target * 0.2) / period);
-        document.getElementById('calc-l2-time').innerText = `${l2Periods} ${freq}`;
-        
-        // Rate per bulan
+        const totalTimes = Math.ceil(target / period);
+        let totalDays = totalTimes;
         let monthlyRate = 0;
-        if (freq === 'hari') monthlyRate = period * 30;
-        else if (freq === 'minggu') monthlyRate = period * 4;
-        else monthlyRate = period;
+
+        if (mainFreq === 'hari') {
+          if (daySubMode === 'custom') {
+            const checkedDays = document.querySelectorAll('.day-pills-wrap input:checked').length;
+            const activeDays = checkedDays > 0 ? checkedDays : 1;
+            totalDays = Math.ceil((totalTimes / activeDays) * 7);
+            monthlyRate = (period * activeDays) * 4;
+          } else {
+            totalDays = totalTimes;
+            monthlyRate = period * 30;
+          }
+          document.getElementById('calc-time-unit').innerText = daySubMode === 'custom' ? 'KALI NABUNG' : 'HARI';
+        } else if (mainFreq === 'minggu') {
+          totalDays = totalTimes * 7;
+          monthlyRate = period * 4;
+          document.getElementById('calc-time-unit').innerText = 'MINGGU';
+        } else if (mainFreq === 'bulan') {
+          totalDays = totalTimes * 30;
+          monthlyRate = period;
+          document.getElementById('calc-time-unit').innerText = 'BULAN';
+        }
+
+        let monthsLeft = (totalDays / 30).toFixed(1);
+
+        document.getElementById('calc-time-num').innerText = totalTimes.toLocaleString('id-ID');
+        document.getElementById('calc-time-desc').innerText = `Estimasi durasi: ~${totalDays} hari total (~${monthsLeft} bulan)`;
+
+        const l2Times = Math.ceil((target * 0.2) / period);
+        document.getElementById('calc-l2-time').innerText = `${l2Times} ${document.getElementById('calc-time-unit').innerText}`;
         document.getElementById('calc-monthly-rate').innerText = formatRupiah(monthlyRate);
 
         const quoteEl = document.getElementById('calc-quote');
-        if (totalDays <= 30) quoteEl.innerHTML = '🔥 <b>Target Cepat!</b> Sangat realistis untuk dicapai dalam sebulan!';
-        else if (totalDays <= 365) quoteEl.innerHTML = '🚀 <b>Rencana Bagus!</b> Dalam setahun target kamu bakal kelar.';
+        if (totalDays <= 30) quoteEl.innerHTML = '🔥 <b>Target Cepat!</b> Realistis selesai dalam sebulan!';
+        else if (totalDays <= 365) quoteEl.innerHTML = '🚀 <b>Rencana Bagus!</b> Target kamu kelar dalam setahun.';
         else quoteEl.innerHTML = '💡 <i>"Langkah kecil konsisten jauh lebih baik daripada nominal besar tapi terhenti."</i>';
+
       } else {
-        emptyWrap.style.display = 'block'; activeWrap.style.display = 'none';
+        emptyWrap.style.display = 'block'; 
+        activeWrap.style.display = 'none';
       }
     }
 
@@ -248,8 +357,24 @@
       if (targetVal <= 0) { showErrorModal('Target Tidak Valid!', 'Harap masukkan nominal <b>Target Utama Tabungan</b> > Rp 0.'); return; }
       if (periodVal <= 0) { showErrorModal('Nominal Nabung Kosong!', 'Harap masukkan nominal <b>Rencana Nabung</b> > Rp 0.'); return; }
 
+      if (mainFreq === 'hari' && daySubMode === 'custom') {
+        const checkedDays = document.querySelectorAll('.day-pills-wrap input:checked');
+        if (checkedDays.length === 0) {
+          showErrorModal('Hari Belum Dipilih!', 'Harap pilih minimal <b>1 Hari</b> untuk jadwal nabung khusus.');
+          return;
+        }
+      }
+
+      // INTEGRASI PENYIMPANAN DATA DENGAN DASHBOARD
       localStorage.setItem('rdpu_goal_name', goalName);
       localStorage.setItem('rdpu_target_custom', targetVal);
+      localStorage.setItem('rdpu_periodAmount', periodVal);
+      localStorage.setItem('rdpu_freq', mainFreq);
+      localStorage.setItem('rdpu_daySubMode', daySubMode);
+      
+      const customDays = Array.from(document.querySelectorAll('.day-pills-wrap input:checked')).map(el => el.value);
+      localStorage.setItem('rdpu_customDays', JSON.stringify(customDays));
+
       localStorage.setItem('rdpu_saldo', 0);
       localStorage.setItem('rdpu_history', JSON.stringify([]));
       window.location.replace('/dashboard');

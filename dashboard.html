@@ -599,7 +599,6 @@
       this.value = rupiah ? 'Rp ' + rupiah : '';
     });
 
-    // LOGIKA ANIMASI DUA ARAH (TOGGLE SHOW / HIDE)
     function toggleEstimasi() {
       if (isEstimasiAnimating) return;
 
@@ -747,6 +746,12 @@
     function renderUI(currentAmount) {
       const goalName = localStorage.getItem('rdpu_goal_name') || "Target Nabung";
       const targetAmount = parseFloat(localStorage.getItem('rdpu_target_custom')) || 500000;
+      
+      // MENGAMBIL DATA SETTINGAN DARI INDEX.HTML
+      const freq = localStorage.getItem('rdpu_freq') || 'hari';
+      const daySubMode = localStorage.getItem('rdpu_daySubMode') || 'everyday';
+      const period = parseFloat(localStorage.getItem('rdpu_periodAmount')) || 20000;
+      const customDays = JSON.parse(localStorage.getItem('rdpu_customDays') || '[]');
 
       document.getElementById('dash-goal-title').innerText = `🎯 ${goalName}`;
 
@@ -758,9 +763,26 @@
       let remaining = targetAmount - currentAmount;
       if (remaining < 0) remaining = 0;
 
-      const avgDailyRate = 20000;
-      let daysLeft = Math.ceil(remaining / avgDailyRate);
-      if (remaining === 0) daysLeft = 0;
+      // HITUNG ESTIMASI DINAMIS DENGAN HARI CUSTOM & FREKUENSI
+      let daysLeft = 0;
+      let totalTimesNeeded = Math.ceil(remaining / period);
+
+      if (remaining === 0) {
+        daysLeft = 0;
+      } else {
+        if (freq === 'hari') {
+          if (daySubMode === 'custom') {
+            const activeDays = customDays.length > 0 ? customDays.length : 1;
+            daysLeft = Math.ceil((totalTimesNeeded / activeDays) * 7);
+          } else {
+            daysLeft = totalTimesNeeded;
+          }
+        } else if (freq === 'minggu') {
+          daysLeft = totalTimesNeeded * 7;
+        } else if (freq === 'bulan') {
+          daysLeft = totalTimesNeeded * 30;
+        }
+      }
 
       let weeksLeft = (daysLeft / 7).toFixed(1);
       let monthsLeft = (daysLeft / 30).toFixed(1);
@@ -775,7 +797,7 @@
       } else if (daysLeft <= 14) {
         quoteEl.innerHTML = '🔥 <b>Sudah Dekat Sekali!</b> Sedikit lagi target utama kamu selesai!';
       } else if (daysLeft <= 60) {
-        quoteEl.innerHTML = '💪 <b>Progres Bagus!</b> Tetap konsisten nabung tiap hari ya.';
+        quoteEl.innerHTML = '💪 <b>Progres Bagus!</b> Tetap konsisten nabung sesuai jadwal ya.';
       } else {
         quoteEl.innerHTML = '💡 <i>"Setiap langkah kecil membawamu makin dekat ke tujuan."</i>';
       }

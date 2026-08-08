@@ -8,22 +8,22 @@
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
   <style>
-  
-  * {
-      -webkit-user-select: none;
-      -ms-user-select: none;/* IE / Edge */
-      user-select: none;/* Standard browser */
-}
-
-   input, textarea {
-      -webkit-user-select: auto;
-      -ms-user-select: auto;
-      user-select: auto;
-    }
-  
     * {
       box-sizing: border-box;
       font-family: 'Plus Jakarta Sans', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      /* ANTI SELECT / COPY TEXT */
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+    }
+
+    /* KOLOM INPUT TETAP BISA DIKETIK */
+    input, textarea {
+      -webkit-user-select: text;
+      -moz-user-select: text;
+      -ms-user-select: text;
+      user-select: text;
     }
 
     body {
@@ -221,9 +221,26 @@
     .history-item { display: flex; justify-content: space-between; align-items: center; padding: 8px 10px; background-color: #f8fafc; border: 1px solid #f1f5f9; border-radius: 10px; font-size: 0.8rem; animation: fadeUp 0.3s ease forwards; }
     .history-note { font-weight: 700; color: #1e293b; font-size: 0.825rem; }
     .history-date { color: #94a3b8; font-size: 0.675rem; }
+    .history-right { display: flex; align-items: center; gap: 6px; }
     .history-diff { font-size: 0.725rem; font-weight: 800; padding: 3px 8px; border-radius: 6px; }
     .diff-plus { background-color: #d1fae5; color: #047857; }
     .diff-minus { background-color: #fee2e2; color: #b91c1c; }
+
+    .btn-edit-item {
+      background: #f1f5f9;
+      color: #475569;
+      border: 1px solid #cbd5e1;
+      padding: 6px 10px;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .btn-edit-item:hover { background: #e2e8f0; color: #0f172a; }
+    .btn-edit-item:active { transform: scale(0.92); }
 
     .modal-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: rgba(15, 23, 42, 0.6); backdrop-filter: blur(6px); display: flex; justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; z-index: 999; padding: 1rem; }
     .modal-overlay.active { opacity: 1; pointer-events: auto; }
@@ -237,6 +254,18 @@
     .btn-modal-primary { width: 100%; background-color: #10b981; color: #ffffff; }
     .btn-modal-cancel { flex: 1; background-color: #f1f5f9; color: #475569; }
     .btn-modal-confirm { flex: 1.2; background-color: #dc2626; color: #ffffff; }
+
+    .edit-warning-note {
+      background-color: #fffbeb;
+      border: 1px solid #fef3c7;
+      border-radius: 10px;
+      padding: 8px 10px;
+      font-size: 0.725rem;
+      color: #b45309;
+      line-height: 1.4;
+      margin-top: 10px;
+      text-align: left;
+    }
   </style>
 </head>
 <body>
@@ -333,7 +362,7 @@
     <div class="modal-box">
       <div class="modal-icon" id="modal-icon">⚠️</div>
       <h3 style="margin:0 0 0.5rem 0;" id="modal-title">Pemberitahuan</h3>
-      <p style="font-size:0.875rem; color:#64748b; margin-bottom:1.25rem;" id="modal-desc"></p>
+      <div style="font-size:0.875rem; color:#64748b; margin-bottom:1.25rem;" id="modal-desc"></div>
       <div class="modal-actions" id="modal-actions"></div>
     </div>
   </div>
@@ -344,6 +373,7 @@
     let currentTargetPercentage = 0;
     let isGoalCompletedCelebration = false;
     let isEstimasiAnimating = false;
+    let editModalInterval = null; // INTERVAL LIVE TIMER DEFEK
 
     function verifyGoalData() {
       const goalName = localStorage.getItem('rdpu_goal_name');
@@ -357,16 +387,20 @@
 
     function formatRupiah(angka) { return 'Rp ' + Number(angka).toLocaleString('id-ID'); }
 
-    inputEl.addEventListener('keyup', function() {
-      let number_string = this.value.replace(/[^,\d]/g, '').toString();
-      let split = number_string.split(',');
-      let sisa = split[0].length % 3;
-      let rupiah = split[0].substr(0, sisa);
-      let ribuan = split[0].substr(sisa).match(/\d{3}/gi);
-      if (ribuan) { let separator = sisa ? '.' : ''; rupiah += separator + ribuan.join('.'); }
-      rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
-      this.value = rupiah ? 'Rp ' + rupiah : '';
-    });
+    function attachRupiahFormatter(el) {
+      el.addEventListener('keyup', function() {
+        let number_string = this.value.replace(/[^,\d]/g, '').toString();
+        let split = number_string.split(',');
+        let sisa = split[0].length % 3;
+        let rupiah = split[0].substr(0, sisa);
+        let ribuan = split[0].substr(sisa).match(/\d{3}/gi);
+        if (ribuan) { let separator = sisa ? '.' : ''; rupiah += separator + ribuan.join('.'); }
+        rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
+        this.value = rupiah ? 'Rp ' + rupiah : '';
+      });
+    }
+
+    attachRupiahFormatter(inputEl);
 
     function toggleEstimasi() {
       if (isEstimasiAnimating) return;
@@ -413,9 +447,13 @@
     }
 
     function closeModal() { 
+      if (editModalInterval) clearInterval(editModalInterval); // BERSIONALKAN TIMER INTERAL
       modalEl.classList.remove('active'); 
       document.body.classList.remove('modal-open');
+      
+      // JALANKAN ANIMASI PROGRESS BAR SETELAH MODAL DITUTUP
       animateProgressBar();
+
       if (isGoalCompletedCelebration) { triggerLongCelebration(); isGoalCompletedCelebration = false; }
     }
 
@@ -457,8 +495,7 @@
       const finalNote = noteText.trim() !== '' ? noteText.trim() : defaultNote;
 
       addHistoryItem(newSaldo, amount, type, finalNote);
-      renderUI(newSaldo);
-      localStorage.setItem('rdpu_saldo', newSaldo);
+      recalculateAllHistoryAndSaldo();
 
       const targetAmount = parseFloat(localStorage.getItem('rdpu_target_custom')) || 500000;
       if (type === 'deposit') {
@@ -516,6 +553,7 @@
 
       let percentage = (currentAmount / targetAmount) * 100;
       if (percentage > 100) percentage = 100;
+      
       currentTargetPercentage = percentage;
 
       let remaining = targetAmount - currentAmount;
@@ -594,6 +632,11 @@
       document.getElementById('percent-text').innerText = percentage.toFixed(1) + '%';
       document.getElementById('current-text').innerText = formatRupiah(currentAmount);
       document.getElementById('remaining-text').innerText = formatRupiah(remaining);
+
+      // JIKA MODAL TIDAK AKTIF, UPDATE LANGSUNG ANIMASI BAR
+      if (!modalEl.classList.contains('active')) {
+        animateProgressBar();
+      }
     }
 
     function addHistoryItem(totalSaldo, amount, type, note) {
@@ -601,10 +644,43 @@
       const now = new Date();
       const dateStr = now.toLocaleDateString('id-ID', { day: '2-digit', month: 'short' }) + ' ' + now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
 
-      historyArr.unshift({ amount: totalSaldo, diff: amount, type: type, note: note, date: dateStr });
+      historyArr.unshift({ 
+        id: Date.now(), 
+        amount: totalSaldo, 
+        diff: amount, 
+        type: type, 
+        note: note, 
+        date: dateStr,
+        isEdited: false,
+        lastEditTime: 0
+      });
       if (historyArr.length > 20) historyArr.pop();
 
       localStorage.setItem('rdpu_history', JSON.stringify(historyArr));
+    }
+
+    function recalculateAllHistoryAndSaldo() {
+      let historyArr = JSON.parse(localStorage.getItem('rdpu_history')) || [];
+      
+      let runningSaldo = 0;
+      let reversedHistory = historyArr.slice().reverse();
+
+      reversedHistory.forEach(item => {
+        if (item.type === 'deposit') {
+          runningSaldo += item.diff;
+        } else if (item.type === 'withdraw') {
+          runningSaldo -= item.diff;
+        }
+        item.amount = runningSaldo < 0 ? 0 : runningSaldo;
+      });
+
+      if (runningSaldo < 0) runningSaldo = 0;
+
+      historyArr = reversedHistory.reverse();
+      localStorage.setItem('rdpu_history', JSON.stringify(historyArr));
+      localStorage.setItem('rdpu_saldo', runningSaldo);
+
+      renderUI(runningSaldo);
       renderHistoryUI();
     }
 
@@ -630,11 +706,105 @@
               <div class="history-note">${noteText}</div>
               <div class="history-date">${item.date} • Saldo: ${formatRupiah(item.amount)}</div>
             </div>
-            <span class="history-diff ${badgeClass}">${sign}${formatRupiah(item.diff)}</span>
+            <div class="history-right">
+              <span class="history-diff ${badgeClass}">${sign}${formatRupiah(item.diff)}</span>
+              <button type="button" class="btn-edit-item" onclick="openEditModal(${item.id})">✏️</button>
+            </div>
           </li>
         `;
       }).join('');
     }
+
+    // FUNGSI EDIT PINTAR: MATEMATIKA MILIDETIK + LIVE TIMER DEFEK PER DETIK + TEXT HIGHLIGHT
+    function openEditModal(itemId) {
+      if (editModalInterval) clearInterval(editModalInterval);
+
+      let historyArr = JSON.parse(localStorage.getItem('rdpu_history')) || [];
+      const item = historyArr.find(h => h.id === itemId);
+      if (!item) return;
+
+      const now = Date.now();
+      const lastEdit = item.lastEditTime || 0;
+      const twentyFourHours = 24 * 60 * 60 * 1000;
+      const timePassed = now - lastEdit;
+      
+      const isNominalLocked = item.isEdited && (timePassed < twentyFourHours);
+
+      const editFormHtml = `
+        <div style="text-align:left; margin-bottom: 0.5rem;">
+          <label style="font-size:0.75rem; color:#64748b; font-weight:700;">Nominal Transaksi Baru:</label>
+          <input type="text" id="edit-modal-amount" value="${formatRupiah(item.diff)}" ${isNominalLocked ? 'disabled style="margin-top:2px; margin-bottom:4px; background:#f1f5f9; color:#94a3b8; cursor:not-allowed;"' : 'style="margin-top:2px; margin-bottom:10px;"'}>
+          ${isNominalLocked ? `<div style="font-size:0.68rem; color:#d97706; margin-bottom:8px;">🔒 <b>Nominal dikunci </b> (<b id="cooldown-timer-text">...</b>).</div>` : ''}
+          
+          <label style="font-size:0.75rem; color:#64748b; font-weight:700;">Catatan/Keterangan Baru:</label>
+          <input type="text" id="edit-modal-note" value="${item.note || ''}" style="margin-top:2px;">
+        </div>
+
+        <div class="edit-warning-note">
+          💡 <b>Peringatan:</b> Mengubah nominal angka akan memperbarui <b>saldo utama</b> & mengunci edit nominal selama <b>24 Jam!</b> Catatan/keterangan tetap <b>bebas diubah</b> kapan saja.
+        </div>
+      `;
+
+      showModal('Edit Transaksi ✏️', editFormHtml, 'warning', true, () => {
+        if (editModalInterval) clearInterval(editModalInterval);
+
+        const newAmountVal = parseRawNumber(document.getElementById('edit-modal-amount').value);
+        const newNoteVal = document.getElementById('edit-modal-note').value.trim();
+
+        if (newAmountVal <= 0) {
+          setTimeout(() => {
+            showModal('Nominal Tidak Valid!', 'Nominal transaksi harus lebih besar dari <b>Rp 0</b>.', 'error');
+          }, 150);
+          return;
+        }
+
+        const isAmountChanged = newAmountVal !== item.diff;
+
+        item.diff = newAmountVal;
+        item.note = newNoteVal !== '' ? newNoteVal : (item.type === 'deposit' ? 'Setoran Tabungan' : 'Penarikan Saldo');
+
+        if (isAmountChanged) {
+          item.isEdited = true;
+          item.lastEditTime = Date.now();
+        }
+
+        localStorage.setItem('rdpu_history', JSON.stringify(historyArr));
+        recalculateAllHistoryAndSaldo();
+      });
+
+      // UPDATE COUNTDOWN TIMER REAL-TIME PER DETIK DI MODAL
+      if (isNominalLocked) {
+        const updateTimerDisplay = () => {
+          const currentTime = Date.now();
+          const currentPassed = currentTime - lastEdit;
+          const remainingMs = twentyFourHours - currentPassed;
+
+          if (remainingMs <= 0) {
+            clearInterval(editModalInterval);
+            const timerEl = document.getElementById('cooldown-timer-text');
+            if (timerEl) timerEl.innerText = "Selesai! Silakan buka ulang modal";
+            return;
+          }
+
+          const h = Math.floor(remainingMs / (1000 * 60 * 60));
+          const m = Math.floor((remainingMs % (1000 * 60 * 60)) / (1000 * 60));
+          const s = Math.floor((remainingMs % (1000 * 60)) / 1000);
+
+          const timerEl = document.getElementById('cooldown-timer-text');
+          if (timerEl) {
+            timerEl.innerText = `${h} Jam ${m} Menit ${s} Detik lagi`;
+          }
+        };
+
+        updateTimerDisplay();
+        editModalInterval = setInterval(updateTimerDisplay, 1000);
+      }
+
+      const modalAmountEl = document.getElementById('edit-modal-amount');
+      if (modalAmountEl && !isNominalLocked) attachRupiahFormatter(modalAmountEl);
+    }
+
+    function parseRawNumber(str) { if (!str) return 0; return parseFloat(str.replace(/[^0-9]/g, '')) || 0; }
 
     function triggerResetModal() {
       showModal(
@@ -658,9 +828,7 @@
         else { history.pushState(null, null, location.href); }
       };
 
-      const savedSaldo = localStorage.getItem('rdpu_saldo');
-      renderUI(savedSaldo ? parseFloat(savedSaldo) : 0);
-      renderHistoryUI();
+      recalculateAllHistoryAndSaldo();
       animateProgressBar();
     };
   </script>

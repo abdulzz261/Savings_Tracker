@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Setup Target Nabung</title>
+  <title>Tabunganku Setup</title>
   <style>
     /* Kunci seluruh teks di dalam web biar gak bisa di-select/di-hold */
 * {
@@ -521,6 +521,21 @@
     </div>
   </div>
   <script>
+  document.addEventListener('copy', (e) => e.preventDefault());
+  
+  document.addEventListener('cut', (e) => e.preventDefault());
+
+  document.addEventListener('contextmenu', (e) => e.preventDefault());
+  
+  document.addEventListener('keydown', (e) => {
+    if (
+      (e.ctrlKey && (e.key === 'c' || e.key === 'x' || e.key === 'u' || e.key === 'a')) || 
+      e.key === 'F12'
+    ) {
+      e.preventDefault();
+    }
+  });
+
     const targetInput = document.getElementById('target-amount');
     const periodInput = document.getElementById('period-amount');
     const modalEl = document.getElementById('app-modal');

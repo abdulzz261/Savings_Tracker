@@ -83,11 +83,14 @@
       <label for="note-input" style="margin-top: 2px;">Catatan/Keterangan (Opsional):</label>
       <input type="text" id="note-input" placeholder="Misal: Uang saku, Beli kuota...">
       
-      <div class="btn-container">
-        <button type="button" class="btn-submit" onclick="handleUpdate('deposit')">Nabung (+)</button>
-        <button type="button" class="btn-withdraw" onclick="handleUpdate('withdraw')">Tarik (-)</button>
-        <button type="button" class="btn-reset" onclick="triggerResetModal()">Reset</button>
-      </div>
+      <div class="btn-container" style="display: flex !important; gap: 10px !important; margin-top: 1rem !important; width: 100% !important;">
+  <button type="button" class="btn-submit" onclick="handleUpdate('deposit')" style="flex: 2 !important; padding: 12px 8px !important; border-radius: 14px !important; font-size: 0.875rem !important; font-weight: 800 !important; background: #10b981 !important; color: #ffffff !important; border: none !important; box-shadow: 0 4px 12px rgba(0,0,0,0.08) !important; cursor: pointer !important;">Nabung (+)</button>
+  
+  <button type="button" class="btn-withdraw" onclick="handleUpdate('withdraw')" style="flex: 2 !important; padding: 12px 8px !important; border-radius: 14px !important; font-size: 0.875rem !important; font-weight: 800 !important; background: #f59e0b !important; color: #ffffff !important; border: none !important; box-shadow: 0 4px 12px rgba(0,0,0,0.08) !important; cursor: pointer !important;">Tarik (-)</button>
+  
+  <button type="button" class="btn-reset" onclick="triggerResetModal()" style="flex: 1 !important; padding: 12px 8px !important; border-radius: 14px !important; font-size: 0.85rem !important; font-weight: 700 !important; background: #fef2f2 !important; color: #dc2626 !important; border: 1.5px solid #fecaca !important; cursor: pointer !important;">Reset</button>
+</div>
+
 
     <div class="history-section">
       <div class="history-title">

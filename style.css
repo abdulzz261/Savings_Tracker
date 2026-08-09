@@ -853,70 +853,46 @@ input:focus {
 .btn-quick:hover {
   background-color: #e2e8f0;
 }
-
+/* CONTAINER */
 .btn-container {
-  display: flex;
-  gap: 10px;
-  margin-top: 1rem;
-  width: 100%;
+  display: flex !important;
+  gap: 10px !important;
+  margin-top: 1rem !important;
+  width: 100% !important;
 }
 
-.btn-submit,
-.btn-withdraw {
-  flex: 2;
-  padding: 12px 8px;
-  border-radius: 14px;
-  font-size: 0.875rem;
-  font-weight: 800;
-  letter-spacing: 0.02em;
-  cursor: pointer;
-  border: none;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, );
+/* NABUNG (+) & TARIK (-) */
+.btn-container .btn-submit,
+.btn-container .btn-withdraw {
+  flex: 2 !important;
+  padding: 12px 8px !important;
+  border-radius: 14px !important;
+  font-size: 0.875rem !important;
+  font-weight: 800 !important;
+  border: none !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08) !important;
 }
 
-.btn-reset {
-  flex: 1;
-  padding: 12px 8px;
-  border-radius: 14px;
-  font-size: 0.85rem;
-  font-weight: 700;
-  cursor: pointer;
-  background-color: #fef2f2;
-  color: #dc2626;
-  border: 1.5px solid #fecaca;
-  transition: all 0.2s ease;
+/* RESET */
+.btn-container .btn-reset {
+  flex: 1 !important;
+  padding: 12px 8px !important;
+  border-radius: 14px !important;
+  font-size: 0.85rem !important;
+  font-weight: 700 !important;
+  background-color: #fef2f2 !important;
+  color: #dc2626 !important;
+  border: 1.5px solid #fecaca !important;
 }
 
-.btn-submit {
-  background: #10b981;
-  color: #ffffff;
+.btn-container .btn-submit {
+  background: #10b981 !important;
+  color: #ffffff !important;
 }
 
-.btn-withdraw {
-  background: #f59e0b;
-  color: #ffffff;
-}
-
-.btn-submit:hover {
-  background: #059669;
-  transform: translateY(-1px);
-}
-
-.btn-withdraw:hover {
-  background: #d97706;
-  transform: translateY(-1px);
-}
-
-.btn-reset:hover {
-  background: #fee2e2;
-  border-color: #fca5a5;
-}
-
-.btn-submit:active,
-.btn-withdraw:active,
-.btn-reset:active {
-  transform: scale(0.97);
+.btn-container .btn-withdraw {
+  background: #f59e0b !important;
+  color: #ffffff !important;
 }
 
 .history-section {

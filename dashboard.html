@@ -65,12 +65,15 @@
       </div>
     </div>
 
-    <div class="input-group">
-      <label>Isi Cepat:</label>
-      <div class="quick-add-group">
-        <button type="button" class="btn-quick" onclick="handleQuickAdd(15000)">+ Rp 15.000</button>
-        <button type="button" class="btn-quick" onclick="handleQuickAdd(20000)">+ Rp 20.000</button>
-      </div>
+<div class="input-group">
+  <label class="input-label">Isi Cepat:</label>
+  <div class="quick-add-grid">
+    <button type="button" class="btn-quick" onclick="handleQuickAdd(5000)">+ Rp 5.000</button>
+    <button type="button" class="btn-quick" onclick="handleQuickAdd(10000)">+ Rp 10.000</button>
+    <button type="button" class="btn-quick" onclick="handleQuickAdd(20000)">+ Rp 20.000</button>
+    <button type="button" class="btn-quick" onclick="handleQuickAdd(50000)">+ Rp 50.000</button>
+  </div>
+</div>
 
       <label for="saldo-input" style="margin-top: 2px;">Nominal Transaksi:</label>
       <input type="text" id="saldo-input" inputmode="numeric" placeholder="Contoh: Rp 50.000">
@@ -83,7 +86,6 @@
         <button type="button" class="btn-withdraw" onclick="handleUpdate('withdraw')">Tarik (-)</button>
         <button type="button" class="btn-reset" onclick="triggerResetModal()">Reset</button>
       </div>
-    </div>
 
     <div class="history-section">
       <div class="history-title">

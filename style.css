@@ -77,8 +77,11 @@ body {
   box-shadow: 0 20px 40px -15px rgba(15, 23, 42, 0.07);
   border: 1px solid #e2e8f0;
   width: 100%;
-  max-width: 500px; /* Atur lebar card di sini (misal 500px) */
+  max-width: 500px;
   height: fit-content;
+  display: flex !important;
+  flex-direction: column !important;
+  overflow: hidden;
 }
 
 /* OPSI BIAR LEBAR DI LAPTOP KALO DIBUKA DI LAYAR BESAR */
@@ -827,10 +830,13 @@ input:focus {
   box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.15);
 }
 
-.quick-add-group {
+.quick-add-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(2, 1fr);
   gap: 8px;
+  margin-top: 4px;
+  margin-bottom: 0.5rem;
+  width: 100%;
 }
 
 .btn-quick {
@@ -893,6 +899,7 @@ button:active {
   margin-top: 1.25rem;
   border-top: 1px solid #e2e8f0;
   padding-top: 1rem;
+  width: 100% !important;
 }
 
 .history-title {
@@ -986,23 +993,40 @@ button:active {
   position: fixed;
   top: 0;
   left: 0;
-  width: 100vw;
-  height: 100vh;
-  background-color: rgba(15, 23, 42, 0.6);
-  backdrop-filter: blur(6px);
+  width: 100%;
+  height: 100%;
+  background: rgba(15, 23, 42, 0.4);
+  backdrop-filter: blur(4px);
   display: flex;
   justify-content: center;
   align-items: center;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.3s ease;
-  z-index: 999;
+  z-index: 1000;
   padding: 1rem;
+  box-sizing: border-box;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1),     visibility 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.modal-box {
+  background: #ffffff;
+  padding: 1.75rem;
+  border-radius: 24px;
+  max-width: 360px;
+  width: 100%;
+  text-align: center;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+  transform: scale(0.9) translateY(10px);
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .modal-overlay.active {
   opacity: 1;
-  pointer-events: auto;
+  visibility: visible;
+}
+
+.modal-overlay.active .modal-box {
+  transform: scale(1) translateY(0);
 }
 
 .modal-box {

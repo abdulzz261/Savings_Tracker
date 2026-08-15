@@ -3,113 +3,108 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Portofolio Developer</title>
-  
-  <link rel="stylesheet" href="style.css">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-  <!-- SCRIPT UPGRADE: MENCEGAH FLASH TEMA & FLICKER DESKTOP -->
-  <script>
-    (function() {
-      // 1. Kunci Tema Langsung Pas Loading
-      if (localStorage.getItem('portfolio-theme') === 'light') {
-        document.documentElement.classList.add('light-theme');
-      }
-      // 2. Kunci Layar Laptop Pas Loading (Biar Gak Flicker UI HP)
-      if (window.innerWidth >= 992) {
-        document.documentElement.classList.add('is-desktop');
-      }
-    })();
-  </script>
+  <title>Setup Target Nabung</title>
+<script>
+  document.write('<link rel="stylesheet" href="style.css?t=' + new Date().getTime() + '">');
+</script>
 </head>
-<body class="preload dark-theme">
+<body>
 
-  <!-- Navbar Fixed -->
-  <!-- STRUKTUR NAVBAR HTML YANG BENAR -->
-<!-- STRUKTUR NAVBAR UTAMA (STANDAR & AMAN SE-DUNIA) -->
-<nav class="navbar">
-  <div class="logo">MY PORTFOLIO</div>
-
-  <div class="nav-right">
-    <button id="theme-toggle" class="theme-btn" aria-label="Toggle Theme">
-      <i class="fa-solid fa-moon"></i>
-    </button>
-    <button id="menu-toggle" class="menu-btn" aria-label="Toggle Menu">
-      <i class="fa-solid fa-bars"></i>
-    </button>
-  </div>
-
-  <ul id="nav-links" class="nav-links">
-    <li><a href="index.html" class="active">Home</a></li>
-    <li><a href="about.html">About</a></li>
-    <li><a href="skills.html">Skills</a></li>
-    <li><a href="projects.html">Projects</a></li>
-    <li><a href="contact.html">Contact</a></li>
-  </ul>
-</nav>
-
-  <!-- Hero Section -->
-  <section class="hero">
-    <div class="status-badge">
-      <span class="pulse-dot"></span> Available for Projects
+  <div class="card">
+    <div class="brand-logo">
+      <span class="brand-icon">💰</span> TABUNGANKU
+    </div>
+    <div class="card-header">
+      <span class="level-tag">PEMBUATAN TARGET</span>
+      <h2>🎯 Target Nabung</h2>
+      <p>Atur target dan estimasi tabunganmu</p>
     </div>
 
-        <h1>Front-End & <span class="highlight">Software Developer</span></h1>
-    <p class="subtitle">Halo! Saya <span class="highlight bold-name">Raoul Van Abdullah</span>, siswa Rekayasa Perangkat Lunak (RPL) yang berfokus pada pengembangan aplikasi web modern, efisien, dan ramah pengguna.</p>
-    
-    <div class="hero-buttons">
-      <a href="projects.html" class="btn primary"><i class="fa-solid fa-code"></i> Lihat Project</a>
-      <a href="contact.html" class="btn secondary"><i class="fa-solid fa-envelope"></i> Hubungi Saya</a>
-    </div>
+    <form id="setupForm" onsubmit="handleSetupSubmit(event)" novalidate>
+      <div class="input-group">
+        <div>
+          <label for="goal-name">Nama Tabungan</label>
+          <input type="text" id="goal-name" placeholder="Contoh: Beli Laptop Asus ROG">
+        </div>
 
-    <div class="code-window">
-      <div class="window-header">
-        <span class="dot red"></span>
-        <span class="dot yellow"></span>
-        <span class="dot green"></span>
+        <div>
+          <label for="target-amount">Target Utama Tabungan</label>
+          <input type="text" id="target-amount" inputmode="numeric" placeholder="Rp 500.000">
+        </div>
+
+        <div>
+          <label for="period-amount">Nominal Nabung</label>
+          <input type="text" id="period-amount" inputmode="numeric" placeholder="Rp 20.000">
+        </div>
+
+        <div>
+          <label>Frekuensi Nabung</label>
+          <div class="freq-toggle-container">
+            <button type="button" class="freq-btn active" onclick="setMainFreq('hari')">Per Hari</button>
+            <button type="button" class="freq-btn" onclick="setMainFreq('minggu')">Per Minggu</button>
+            <button type="button" class="freq-btn" onclick="setMainFreq('bulan')">Per Bulan</button>
+          </div>
+
+          <!-- OPSI SUB UNTUK "PER HARI" -->
+          <div class="sub-day-mode active" id="sub-day-wrapper">
+            <button type="button" class="sub-btn active" onclick="setDaySubMode('everyday')">Setiap Hari</button>
+            <button type="button" class="sub-btn" onclick="setDaySubMode('custom')">Pilih Hari Khusus</button>
+          </div>
+          
+          <!-- SELEKSI HARI PILLS AESTHETIC -->
+          <div class="day-picker-box" id="day-picker-box">
+            <div class="day-pills-wrap">
+              <label class="pill-item"><input type="checkbox" value="Sen" checked onchange="updateCalculator()"><span class="pill-label">Sen</span></label>
+              <label class="pill-item"><input type="checkbox" value="Sel" checked onchange="updateCalculator()"><span class="pill-label">Sel</span></label>
+              <label class="pill-item"><input type="checkbox" value="Rab" checked onchange="updateCalculator()"><span class="pill-label">Rab</span></label>
+              <label class="pill-item"><input type="checkbox" value="Kam" checked onchange="updateCalculator()"><span class="pill-label">Kam</span></label>
+              <label class="pill-item"><input type="checkbox" value="Jum" checked onchange="updateCalculator()"><span class="pill-label">Jum</span></label>
+              <label class="pill-item"><input type="checkbox" value="Sab" onchange="updateCalculator()"><span class="pill-label">Sab</span></label>
+              <label class="pill-item"><input type="checkbox" value="Min" onchange="updateCalculator()"><span class="pill-label">Min</span></label>
+            </div>
+          </div>
+        </div>
+
+        <div class="calc-box">
+          <div class="calc-header-title">⚡ Estimasi & Breakdown Progres</div>
+          <div id="calc-content-empty" class="calc-empty-text">Masukkan target & nominal nabung untuk melihat analisis estimasi waktu.</div>
+          
+          <div id="calc-content-active" style="display: none;">
+            <div class="time-highlight">
+              <span class="time-num" id="calc-time-num">0</span>
+              <span class="time-unit" id="calc-time-unit">HARI</span>
+              <div class="time-desc" id="calc-time-desc">Estimasi total durasi waktu</div>
+            </div>
+
+            <div class="calc-stats-grid">
+              <div class="stat-card">
+                <div class="stat-label">🎯 Milestone 20%</div>
+                <div class="stat-val" id="calc-l2-time">0 Hari</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-label">📊 Laju Nabung / Bulan</div>
+                <div class="stat-val" id="calc-monthly-rate">Rp 0</div>
+              </div>
+            </div>
+
+            <div class="calc-badge-quote" id="calc-quote">💡 <i>"Konsistensi kecil membawa dampak besar!"</i></div>
+          </div>
+        </div>
+
+        <button type="submit" class="btn-submit-main">Mulai Menabung</button>
       </div>
-      <div class="code-body">
-        <code>
-          <span class="keyword">const</span> <span class="property">developer</span> = {<br>
-          &nbsp;&nbsp;<span class="property">name</span><span class="punctuation">:</span> <span class="string">'Raoul Van Abdullah'</span>,<br>
-          &nbsp;&nbsp;<span class="property">role</span><span class="punctuation">:</span> <span class="string">'Junior Web Developer'</span>,<br>
-          &nbsp;&nbsp;<span class="property">skills</span><span class="punctuation">:</span> [<span class="string">'HTML'</span>, <span class="string">'CSS'</span>, <span class="string">'JS'</span>, <span class="string">'Python'</span>, <span class="string">'Flask'</span>],<br>
-          &nbsp;&nbsp;<span class="property">status</span><span class="punctuation">:</span> <span class="string">'Building awesome apps 🚀'</span><br>
-          };
-        </code>
-      </div>
+    </form>
+  </div>
+
+  <div class="modal-overlay" id="app-modal">
+    <div class="modal-box">
+      <div class="modal-icon" id="modal-icon">🏦</div>
+      <h3 class="modal-title" id="modal-title">Lanjutkan Tabungan?</h3>
+      <p style="text-align: center; color: #64748b; font-size: 0.85rem; margin-bottom: 12px;" id="modal-sub-desc">Kamu masih memiliki tabungan aktif yang tersimpan:</p>
+      <div class="saving-summary-box" id="saving-summary"></div>
+      <div class="modal-actions-setup" id="modal-actions-wrap"></div>
     </div>
-  </section>
-
-  <!-- Stats -->
-  <div class="stats-container">
-  <div class="stat-box">
-    <h3>5+</h3>
-    <p>Project Selesai</p>
   </div>
-  
-  <div class="stat-box">
-    <h3>8+</h3>
-    <p>Tech Stack Dikuasai</p>
-  </div>
-  
-  <div class="stat-box">
-    <h3>100%</h3>
-    <p>Semangat Coding</p>
-  </div>
-
-  <!-- CARD KE-4 BIAR PAS 4 BIJI (POLA 2-2 DI HP) -->
-  <div class="stat-box">
-    <h3>100%</h3>
-    <p>Komitmen RPL</p>
-  </div>
-</div>
-
-  <footer class="footer">
-    <p>&copy; 2026 Raoul Van Abdullah Portfolio. Built with ❤️</p>
-  </footer>
-
-  <script src="script.js"></script>
+<script src="index.js"></script>
 </body>
 </html>
